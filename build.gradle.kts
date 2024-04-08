@@ -4,12 +4,10 @@ import java.nio.file.StandardCopyOption
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.5.10"
 }
 
 allprojects {
     apply(plugin = "java")
-    apply(plugin = "io.papermc.paperweight.userdev")
 
     group = compileGroup()
     version = compileVersion(true)
@@ -27,13 +25,12 @@ allprojects {
         mavenCentral()
         maven("https://repo.panda-lang.org/releases")
         maven("https://lib.alpn.cloud/alpine-public/")
-        maven("https://repo.codemc.io/repository/maven-public/")
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
     configurations.create("shaded")
     dependencies {
-        paperweight.paperDevBundle(rootProject.property("paper_version") as String)
+        compileOnly(group = "io.papermc.paper", name = "paper-api", version = rootProject.property("paper_version") as String)
         compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.3.6")
 
         compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
@@ -93,10 +90,6 @@ allprojects {
             filesMatching("plugin.yml") {
                 expand(props)
             }
-        }
-
-        assemble {
-            dependsOn(reobfJar)
         }
     }
 }
