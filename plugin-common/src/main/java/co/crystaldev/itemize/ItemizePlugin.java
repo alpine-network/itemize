@@ -38,7 +38,7 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Override
     public @NotNull Optional<ItemStack> lookup(@NotNull NamespacedKey identifier) {
-        return Optional.ofNullable(this.registry.get(identifier)).map(ItemizeItem::getItemStack);
+        return Optional.ofNullable(this.registry.get(identifier)).map(ItemizeItem::getItem);
     }
 
     @Override
@@ -59,6 +59,6 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Override
     public @NotNull Iterable<ItemStack> values() {
-        return this.registry.values().stream().map(ItemizeItem::getItemStack).collect(Collectors.toUnmodifiableSet());
+        return this.registry.values().stream().map(ItemizeItem::getItem).collect(Collectors.toUnmodifiableSet());
     }
 }

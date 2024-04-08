@@ -36,7 +36,7 @@ final class ItemizeCommand extends AlpineCommand {
         PlayerInventory inventory = player.getInventory();
         for (int i = 0; i < amount.orElse(1); i++) {
             // each item could be unique; query each item individually
-            inventory.addItem(item.getItemStack());
+            inventory.addItem(item.getItem());
         }
     }
 }

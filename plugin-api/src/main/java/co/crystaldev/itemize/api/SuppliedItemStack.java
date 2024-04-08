@@ -11,12 +11,12 @@ import java.util.function.Supplier;
 record SuppliedItemStack(@NotNull Supplier<ItemStack> supplier) implements ItemizeItem {
 
     @Override
-    public @NotNull ItemStack getItemStack() {
+    public @NotNull ItemStack getItem() {
         return this.supplier.get();
     }
 
     @Override
     public boolean matches(@NotNull ItemStack itemStack) {
-        return this.getItemStack().equals(itemStack);
+        return this.getItem().equals(itemStack);
     }
 }

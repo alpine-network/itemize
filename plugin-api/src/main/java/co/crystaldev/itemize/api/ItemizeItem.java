@@ -18,7 +18,7 @@ public interface ItemizeItem {
      * @return The {@link ItemStack} representation of this item.
      */
     @NotNull
-    ItemStack getItemStack();
+    ItemStack getItem();
 
     /**
      * Retrieves the {@link ItemStack} used to represent this item.
@@ -26,8 +26,8 @@ public interface ItemizeItem {
      * @return The display {@link ItemStack}.
      */
     @NotNull
-    default ItemStack getDisplyItemStack() {
-        return this.getItemStack();
+    default ItemStack getDisplayItem() {
+        return this.getItem();
     }
 
     /**

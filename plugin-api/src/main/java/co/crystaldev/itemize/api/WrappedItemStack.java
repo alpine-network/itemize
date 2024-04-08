@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 record WrappedItemStack(@NotNull ItemStack itemStack) implements ItemizeItem {
 
     @Override
-    public @NotNull ItemStack getItemStack() {
+    public @NotNull ItemStack getItem() {
         return this.itemStack;
     }
 
