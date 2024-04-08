@@ -1,0 +1,13 @@
+main: co.crystaldev.itemize.ItemizePlugin
+name: ${pluginName}
+description: ${pluginDescription}
+version: ${pluginVersionRaw}
+authors: [ BestBearr ]
+api-version: 1.13
+depend:
+  - AlpineCore
+
+permissions:
+  itemize.command:
+    description: grants access to the Itemize interface command
+    default: op
