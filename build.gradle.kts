@@ -114,7 +114,6 @@ sourceSets {
 }
 
 tasks {
-    // shadow
     shadowJar {
         configurations = listOf(project.configurations["shaded"])
         archiveClassifier.set("dev-shadow")

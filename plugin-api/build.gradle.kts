@@ -2,6 +2,12 @@ plugins {
     id("maven-publish")
 }
 
+tasks.jar {
+    doFirst {
+        archiveClassifier.set("")
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
