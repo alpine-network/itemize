@@ -50,6 +50,19 @@ public final class ConfigItemizeItem {
     }
 
     @NotNull
+    public String asString() {
+        if (this.value instanceof NamespacedKey key) {
+            return key.asString();
+        }
+        else if (this.value instanceof XMaterial type) {
+            return "minecraft:" + type.name().toLowerCase();
+        }
+        else {
+            throw new IllegalStateException("unsupported ItemizeItem type");
+        }
+    }
+
+    @NotNull
     public static ConfigItemizeItem of(@NotNull NamespacedKey key) {
         return new ConfigItemizeItem(key);
     }
@@ -77,15 +90,7 @@ public final class ConfigItemizeItem {
     public static final class Adapter implements Serializer<ConfigItemizeItem, String> {
         @Override
         public String serialize(ConfigItemizeItem element) {
-            if (element.value instanceof NamespacedKey key) {
-                return key.asString();
-            }
-            else if (element.value instanceof XMaterial type) {
-                return "minecraft:" + type.name().toLowerCase();
-            }
-            else {
-                throw new IllegalStateException("unsupported ItemizeItem type");
-            }
+            return element.asString();
         }
 
         @Override
