@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * @since 1.0.1
+ * @since 1.0.2
  */
 @NoArgsConstructor
 @SerializeWith(serializer = ConfigItemizeItem.Adapter.class) @Configuration
