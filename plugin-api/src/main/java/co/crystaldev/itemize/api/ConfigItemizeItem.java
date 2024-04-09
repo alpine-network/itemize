@@ -69,6 +69,11 @@ public final class ConfigItemizeItem {
 
     @NotNull
     public static ConfigItemizeItem of(@NotNull String key) {
+        if (key.startsWith("minecraft:")) {
+            key = key.substring("minecraft:".length()).toUpperCase();
+            return of(XMaterial.matchXMaterial(key).orElseThrow());
+        }
+
         return Optional.ofNullable(NamespacedKey.fromString(key)).map(ConfigItemizeItem::of).orElseThrow();
     }
 
