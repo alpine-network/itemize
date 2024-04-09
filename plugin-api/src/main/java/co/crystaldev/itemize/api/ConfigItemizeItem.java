@@ -16,7 +16,7 @@ import java.util.Optional;
  * @since 1.0.2
  */
 @NoArgsConstructor
-@SerializeWith(serializer = ConfigItemizeItem.Adapter.class) @Configuration
+@Configuration @SerializeWith(serializer = ConfigItemizeItem.Adapter.class)
 public final class ConfigItemizeItem {
 
     private Object value;
@@ -74,7 +74,7 @@ public final class ConfigItemizeItem {
         return of(XMaterial.matchXMaterial(itemStack));
     }
 
-    static final class Adapter implements Serializer<ConfigItemizeItem, String> {
+    public static final class Adapter implements Serializer<ConfigItemizeItem, String> {
         @Override
         public String serialize(ConfigItemizeItem element) {
             if (element.value instanceof NamespacedKey key) {
