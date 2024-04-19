@@ -7,6 +7,7 @@ import co.crystaldev.itemize.api.ItemizeItem;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -37,8 +38,8 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     }
 
     @Override
-    public @NotNull Optional<ItemStack> lookup(@NotNull Identifier identifier) {
-        return Optional.ofNullable(this.registry.get(identifier)).map(ItemizeItem::getItem);
+    public @Nullable ItemizeItem fetch(@NotNull Identifier identifier) {
+        return this.registry.get(identifier);
     }
 
     @Override

@@ -2,6 +2,7 @@ package co.crystaldev.itemize.api;
 
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -43,10 +44,10 @@ public interface Itemize {
      * Retrieves an item associated with the given identifier.
      *
      * @param identifier The unique identifier for the item.
-     * @return An {@link Optional} containing the {@link ItemStack} if present.
+     * @return The item if present.
      */
-    @NotNull
-    Optional<ItemStack> lookup(@NotNull Identifier identifier);
+    @Nullable
+    ItemizeItem fetch(@NotNull Identifier identifier);
 
     /**
      * Checks if the item associated with the given identifier matches the provided item.

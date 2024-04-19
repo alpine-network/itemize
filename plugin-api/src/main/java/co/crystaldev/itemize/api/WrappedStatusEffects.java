@@ -8,30 +8,30 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * @since 1.0.0
+ * @since 1.1.0
  */
 @AllArgsConstructor
-final class WrappedItemStack implements ItemizeItem {
+final class WrappedStatusEffects implements ItemizeItem {
 
-    private final ItemStack itemStack;
+    private final Set<PotionEffect> effects;
 
     @Override
     public @NotNull ItemStack getItem() {
-        return this.itemStack;
+        throw new UnsupportedOperationException("not of item stack type");
     }
 
     @Override
     public @NotNull Set<PotionEffect> getEffects() {
-        throw new UnsupportedOperationException("not of potion effect type");
+        return this.effects;
     }
 
     @Override
     public @NotNull ItemType getType() {
-        return ItemType.ITEM_STACK;
+        return ItemType.STATUS_EFFECT;
     }
 
     @Override
     public boolean matches(@NotNull ItemStack itemStack) {
-        return this.itemStack.equals(itemStack);
+        throw new UnsupportedOperationException("not of item stack type");
     }
 }
