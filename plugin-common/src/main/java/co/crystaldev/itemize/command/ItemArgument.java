@@ -2,13 +2,13 @@ package co.crystaldev.itemize.command;
 
 import co.crystaldev.alpinecore.framework.command.AlpineArgumentResolver;
 import co.crystaldev.itemize.ItemizePlugin;
+import co.crystaldev.itemize.api.Identifier;
 import co.crystaldev.itemize.api.ItemizeItem;
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
 import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -29,7 +29,7 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
 
         // ensure the key is valid
         ItemizePlugin itemize = ItemizePlugin.getInstance();
-        NamespacedKey key = NamespacedKey.fromString(argument);
+        Identifier key = Identifier.fromString(argument);
         if (key == null || !itemize.contains(key)) {
             return ParseResult.failure("<red>Unregistered or invalid delegate provided");
         }
@@ -42,7 +42,7 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
         String current = context.getCurrent().lastLevel().toLowerCase();
         return ItemizePlugin.getInstance().getRegistry().keySet()
                 .stream()
-                .map(NamespacedKey::asString)
+                .map(Identifier::toString)
                 .filter(v -> v.startsWith(current))
                 .collect(SuggestionResult.collector());
     }

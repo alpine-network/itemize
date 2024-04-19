@@ -6,7 +6,6 @@ import de.exlll.configlib.SerializeWith;
 import de.exlll.configlib.Serializer;
 import lombok.NoArgsConstructor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,14 +32,14 @@ public final class ConfigItemizeItem {
             return this.cachedItem.getItem();
         }
 
-        if (this.value instanceof NamespacedKey key) {
-            Optional<ItemizeItem> resolved = Itemize.get().get(key);
+        if (this.value instanceof Identifier) {
+            Optional<ItemizeItem> resolved = Itemize.get().get((Identifier) this.value);
             if (resolved.isPresent()) {
                 return (this.cachedItem = resolved.get()).getItem();
             }
         }
-        else if (this.value instanceof XMaterial type) {
-            ItemStack itemStack = type.parseItem();
+        else if (this.value instanceof XMaterial) {
+            ItemStack itemStack = ((XMaterial) this.value).parseItem();
             if (itemStack != null) {
                 return (this.cachedItem = new WrappedItemStack(itemStack)).getItem();
             }
@@ -51,11 +50,11 @@ public final class ConfigItemizeItem {
 
     @NotNull
     public String asString() {
-        if (this.value instanceof NamespacedKey key) {
-            return key.asString();
+        if (this.value instanceof Identifier) {
+            return this.value.toString();
         }
-        else if (this.value instanceof XMaterial type) {
-            return "minecraft:" + type.name().toLowerCase();
+        else if (this.value instanceof XMaterial) {
+            return "minecraft:" + ((XMaterial) this.value).name().toLowerCase();
         }
         else {
             throw new IllegalStateException("unsupported ItemizeItem type");
@@ -63,18 +62,24 @@ public final class ConfigItemizeItem {
     }
 
     @NotNull
-    public static ConfigItemizeItem of(@NotNull NamespacedKey key) {
+    public static ConfigItemizeItem of(@NotNull Identifier key) {
         return new ConfigItemizeItem(key);
     }
 
     @NotNull
     public static ConfigItemizeItem of(@NotNull String key) {
         if (key.startsWith("minecraft:")) {
-            key = key.substring("minecraft:".length()).toUpperCase();
-            return of(XMaterial.matchXMaterial(key).orElseThrow());
+            XMaterial resolved = XMaterial
+                    .matchXMaterial(key.substring("minecraft:".length()).toUpperCase())
+                    .map(v -> !v.isSupported() ? null : v)
+                    .orElseThrow(() -> new IllegalStateException("Unknown or unsupported type: " + key));
+            return of(resolved);
         }
 
-        return Optional.ofNullable(NamespacedKey.fromString(key)).map(ConfigItemizeItem::of).orElseThrow();
+        return Optional
+                .ofNullable(Identifier.fromString(key))
+                .map(ConfigItemizeItem::of)
+                .orElseThrow(() -> new IllegalStateException("Invalid identifier: " + key));
     }
 
     @NotNull
@@ -106,14 +111,14 @@ public final class ConfigItemizeItem {
 
             if (!element.contains(":")) {
                 Optional<XMaterial> resolved = XMaterial.matchXMaterial(element.toUpperCase());
-                if (resolved.isEmpty()) {
+                if (!resolved.isPresent()) {
                     throw new IllegalStateException("unable to resolve ItemizeItem type \"" + element + "\"");
                 }
 
                 return new ConfigItemizeItem(resolved.get());
             }
             else {
-                NamespacedKey key = NamespacedKey.fromString(element);
+                Identifier key = Identifier.fromString(element);
                 if (key == null) {
                     throw new IllegalStateException("unable to resolve malformed ItemizeItem key \"" + element + "\"");
                 }

@@ -1,6 +1,5 @@
 package co.crystaldev.itemize.api;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,7 @@ public interface Itemize {
      * @param identifier The unique identifier for the item.
      * @param item       The item properties to be registered.
      */
-    void register(@NotNull NamespacedKey identifier, @NotNull ItemizeItem item);
+    void register(@NotNull Identifier identifier, @NotNull ItemizeItem item);
 
     /**
      * Retrieves an item associated with the given identifier.
@@ -38,7 +37,7 @@ public interface Itemize {
      * @return An {@link Optional} containing the item if present.
      */
     @NotNull
-    Optional<ItemizeItem> get(@NotNull NamespacedKey identifier);
+    Optional<ItemizeItem> get(@NotNull Identifier identifier);
 
     /**
      * Retrieves an item associated with the given identifier.
@@ -47,7 +46,7 @@ public interface Itemize {
      * @return An {@link Optional} containing the {@link ItemStack} if present.
      */
     @NotNull
-    Optional<ItemStack> lookup(@NotNull NamespacedKey identifier);
+    Optional<ItemStack> lookup(@NotNull Identifier identifier);
 
     /**
      * Checks if the item associated with the given identifier matches the provided item.
@@ -55,7 +54,7 @@ public interface Itemize {
      * @param item The {@link ItemStack} to check.
      * @return Whether the provided item matches the registered item.
      */
-    boolean matches(@NotNull NamespacedKey identifier, @NotNull ItemStack item);
+    boolean matches(@NotNull Identifier identifier, @NotNull ItemStack item);
 
     /**
      * Checks if there is an item registered with the given identifier.
@@ -63,7 +62,7 @@ public interface Itemize {
      * @param identifier The unique identifier to query.
      * @return Whether there is an item associated with the provided identifier.
      */
-    boolean contains(@NotNull NamespacedKey identifier);
+    boolean contains(@NotNull Identifier identifier);
 
     /**
      * Retrieves an iterable collection of all registered item identifiers.
@@ -71,7 +70,7 @@ public interface Itemize {
      * @return All registered item identifiers.
      */
     @NotNull
-    Iterable<NamespacedKey> keys();
+    Iterable<Identifier> keys();
 
     /**
      * Retrieves an iterable collection of all registered items.

@@ -30,7 +30,7 @@ allprojects {
 
     configurations.create("shaded")
     dependencies {
-        compileOnly(group = "io.papermc.paper", name = "paper-api", version = rootProject.property("paper_version") as String)
+        compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
         compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.3.6")
 
         compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
@@ -39,8 +39,8 @@ allprojects {
 
     tasks {
         java {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
         }
 
         withType<JavaCompile> {

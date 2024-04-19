@@ -1,10 +1,10 @@
 package co.crystaldev.itemize;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
+import co.crystaldev.itemize.api.Identifier;
 import co.crystaldev.itemize.api.Itemize;
 import co.crystaldev.itemize.api.ItemizeItem;
 import lombok.Getter;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,41 +24,41 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     { instance = this; }
 
     @Getter
-    private final Map<NamespacedKey, ItemizeItem> registry = new ConcurrentHashMap<>();
+    private final Map<Identifier, ItemizeItem> registry = new ConcurrentHashMap<>();
 
     @Override
-    public void register(@NotNull NamespacedKey identifier, @NotNull ItemizeItem item) {
+    public void register(@NotNull Identifier identifier, @NotNull ItemizeItem item) {
         this.registry.put(identifier, item);
     }
 
     @Override
-    public @NotNull Optional<ItemizeItem> get(@NotNull NamespacedKey identifier) {
+    public @NotNull Optional<ItemizeItem> get(@NotNull Identifier identifier) {
         return Optional.ofNullable(this.registry.get(identifier));
     }
 
     @Override
-    public @NotNull Optional<ItemStack> lookup(@NotNull NamespacedKey identifier) {
+    public @NotNull Optional<ItemStack> lookup(@NotNull Identifier identifier) {
         return Optional.ofNullable(this.registry.get(identifier)).map(ItemizeItem::getItem);
     }
 
     @Override
-    public boolean matches(@NotNull NamespacedKey identifier, @NotNull ItemStack item) {
+    public boolean matches(@NotNull Identifier identifier, @NotNull ItemStack item) {
         ItemizeItem resolved = this.registry.get(identifier);
         return resolved != null && resolved.matches(item);
     }
 
     @Override
-    public boolean contains(@NotNull NamespacedKey identifier) {
+    public boolean contains(@NotNull Identifier identifier) {
         return this.registry.containsKey(identifier);
     }
 
     @Override
-    public @NotNull Iterable<NamespacedKey> keys() {
+    public @NotNull Iterable<Identifier> keys() {
         return this.registry.keySet();
     }
 
     @Override
     public @NotNull Iterable<ItemStack> values() {
-        return this.registry.values().stream().map(ItemizeItem::getItem).collect(Collectors.toUnmodifiableSet());
+        return this.registry.values().stream().map(ItemizeItem::getItem).collect(Collectors.toList());
     }
 }

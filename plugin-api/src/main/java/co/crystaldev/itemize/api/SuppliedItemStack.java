@@ -1,5 +1,6 @@
 package co.crystaldev.itemize.api;
 
+import lombok.AllArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +9,10 @@ import java.util.function.Supplier;
 /**
  * @since 1.0.0
  */
-record SuppliedItemStack(@NotNull Supplier<ItemStack> supplier) implements ItemizeItem {
+@AllArgsConstructor
+final class SuppliedItemStack implements ItemizeItem {
+
+    private final Supplier<ItemStack> supplier;
 
     @Override
     public @NotNull ItemStack getItem() {

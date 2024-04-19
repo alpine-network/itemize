@@ -2,11 +2,14 @@ plugins {
     id("maven-publish")
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            // Set the unshaded JAR as the main artifact
-            artifact(tasks["jar"])
+            from(components["java"])
 
             pom {
                 name.set("${rootProject.properties["plugin_name"]}-API")
