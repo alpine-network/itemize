@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * @author BestBearr <crumbygames12@gmail.com>
@@ -38,6 +37,20 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     }
 
     @Override
+    public @NotNull Optional<Identifier> get(@NotNull ItemStack itemStack) {
+        for (Map.Entry<Identifier, ItemizeItem> entry : this.registry.entrySet()) {
+            Identifier key = entry.getKey();
+            ItemizeItem value = entry.getValue();
+
+            if (value.matches(itemStack)) {
+                return Optional.of(key);
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public @Nullable ItemizeItem fetch(@NotNull Identifier identifier) {
         return this.registry.get(identifier);
     }
@@ -56,10 +69,5 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     @Override
     public @NotNull Iterable<Identifier> keys() {
         return this.registry.keySet();
-    }
-
-    @Override
-    public @NotNull Iterable<ItemStack> values() {
-        return this.registry.values().stream().map(ItemizeItem::getItem).collect(Collectors.toList());
     }
 }

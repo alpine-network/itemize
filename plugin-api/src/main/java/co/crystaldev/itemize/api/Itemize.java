@@ -41,6 +41,15 @@ public interface Itemize {
     Optional<ItemizeItem> get(@NotNull Identifier identifier);
 
     /**
+     * Retrieves the {@link Identifier} associated with the given {@link ItemStack}.
+     *
+     * @param itemStack The {@link ItemStack} to retrieve the identifier for.
+     * @return The identifier if present.
+     */
+    @NotNull
+    Optional<Identifier> get(@NotNull ItemStack itemStack);
+
+    /**
      * Retrieves an item associated with the given identifier.
      *
      * @param identifier The unique identifier for the item.
@@ -72,12 +81,4 @@ public interface Itemize {
      */
     @NotNull
     Iterable<Identifier> keys();
-
-    /**
-     * Retrieves an iterable collection of all registered items.
-     *
-     * @return All registered items.
-     */
-    @NotNull
-    Iterable<ItemStack> values();
 }
