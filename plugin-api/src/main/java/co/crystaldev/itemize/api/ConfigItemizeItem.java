@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
+ * Represents a configuration item used in the Itemize system.
+ *
  * @since 1.0.2
  */
 @NoArgsConstructor
@@ -22,10 +24,16 @@ public final class ConfigItemizeItem {
 
     private ItemizeItem cachedItem;
 
-    private ConfigItemizeItem(@NotNull Object value) {
+    ConfigItemizeItem(@NotNull Object value) {
         this.value = value;
     }
 
+    /**
+     * Retrieves the associated ItemStack for this item.
+     *
+     * @return The ItemStack representation of this item.
+     * @throws IllegalStateException If the item type is unsupported or invalid.
+     */
     @NotNull
     public ItemStack getItem() {
         if (this.cachedItem != null) {
@@ -48,6 +56,31 @@ public final class ConfigItemizeItem {
         throw new IllegalStateException("unsupported or invalid ItemizeItem type \"" + this.value + "\"");
     }
 
+    /**
+     * Retrieves the identifier of the item.
+     *
+     * @return The identifier of the item.
+     * @throws IllegalStateException If the item type is unsupported or invalid.
+     */
+    @NotNull
+    public Identifier getIdentifier() {
+        if (this.value instanceof Identifier) {
+            return (Identifier) this.value;
+        }
+        else if (this.value instanceof XMaterial) {
+            return Identifier.minecraft(((XMaterial) this.value).name().toLowerCase());
+        }
+        else {
+            throw new IllegalStateException("unsupported ItemizeItem type");
+        }
+    }
+
+    /**
+     * Retrieves the identifier of the item.
+     *
+     * @return The identifier of the item.
+     * @throws IllegalStateException If the item type is unsupported or invalid.
+     */
     @NotNull
     public String asString() {
         if (this.value instanceof Identifier) {
@@ -97,7 +130,7 @@ public final class ConfigItemizeItem {
         return of(XMaterial.matchXMaterial(itemStack));
     }
 
-    public static final class Adapter implements Serializer<ConfigItemizeItem, String> {
+    static final class Adapter implements Serializer<ConfigItemizeItem, String> {
         @Override
         public String serialize(ConfigItemizeItem element) {
             return element.asString();
