@@ -29,6 +29,34 @@ public final class ConfigItemizeItem {
     }
 
     /**
+     * Retrieves the {@link ItemizeItem} defined by this ConfigItemizeItem.
+     *
+     * @return The ItemizeItem defined by this ConfigItemizeItem.
+     * @throws IllegalStateException If the item type is unsupported or invalid.
+     */
+    @NotNull
+    public ItemizeItem get() {
+        if (this.cachedItem != null) {
+            return this.cachedItem;
+        }
+
+        if (this.value instanceof Identifier) {
+            Optional<ItemizeItem> resolved = Itemize.get().get((Identifier) this.value);
+            if (resolved.isPresent()) {
+                return this.cachedItem = resolved.get();
+            }
+        }
+        else if (this.value instanceof XMaterial) {
+            ItemStack itemStack = ((XMaterial) this.value).parseItem();
+            if (itemStack != null) {
+                return this.cachedItem = new WrappedItemStack(itemStack);
+            }
+        }
+
+        throw new IllegalStateException("unsupported or invalid ItemizeItem type \"" + this.value + "\"");
+    }
+
+    /**
      * Retrieves the associated ItemStack for this item.
      *
      * @return The ItemStack representation of this item.
@@ -36,24 +64,7 @@ public final class ConfigItemizeItem {
      */
     @NotNull
     public ItemStack getItem() {
-        if (this.cachedItem != null) {
-            return this.cachedItem.getItem();
-        }
-
-        if (this.value instanceof Identifier) {
-            Optional<ItemizeItem> resolved = Itemize.get().get((Identifier) this.value);
-            if (resolved.isPresent()) {
-                return (this.cachedItem = resolved.get()).getItem();
-            }
-        }
-        else if (this.value instanceof XMaterial) {
-            ItemStack itemStack = ((XMaterial) this.value).parseItem();
-            if (itemStack != null) {
-                return (this.cachedItem = new WrappedItemStack(itemStack)).getItem();
-            }
-        }
-
-        throw new IllegalStateException("unsupported or invalid ItemizeItem type \"" + this.value + "\"");
+        return this.get().getItem();
     }
 
     /**
