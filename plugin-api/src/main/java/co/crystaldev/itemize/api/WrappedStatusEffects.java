@@ -34,4 +34,9 @@ final class WrappedStatusEffects implements ItemizeItem {
     public boolean matches(@NotNull ItemStack itemStack) {
         throw new UnsupportedOperationException("not of item stack type");
     }
+
+    @Override
+    public int getMaxStackSize() {
+        return -1;
+    }
 }

@@ -34,4 +34,9 @@ final class WrappedItemStack implements ItemizeItem {
     public boolean matches(@NotNull ItemStack itemStack) {
         return this.itemStack.isSimilar(itemStack);
     }
+
+    @Override
+    public int getMaxStackSize() {
+        return this.itemStack.getMaxStackSize();
+    }
 }

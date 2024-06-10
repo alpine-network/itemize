@@ -35,4 +35,9 @@ final class SuppliedItemStack implements ItemizeItem {
     public boolean matches(@NotNull ItemStack itemStack) {
         return this.getItem().equals(itemStack);
     }
+
+    @Override
+    public int getMaxStackSize() {
+        return this.getItem().getMaxStackSize();
+    }
 }

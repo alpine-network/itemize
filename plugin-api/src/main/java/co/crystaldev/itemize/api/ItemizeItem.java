@@ -57,6 +57,13 @@ public interface ItemizeItem {
      */
     boolean matches(@NotNull ItemStack itemStack);
 
+    /**
+     * Retrieves the maximum stack size for this item.
+     *
+     * @return The maximum stack size.
+     */
+    int getMaxStackSize();
+
     @NotNull
     static ItemizeItem fromItem(@NotNull ItemStack itemStack) {
         return new WrappedItemStack(itemStack);
