@@ -43,7 +43,7 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
         return ItemizePlugin.getInstance().getCombinedRegistry().keySet()
                 .stream()
                 .map(Identifier::toString)
-                .filter(v -> v.startsWith(current))
+                .filter(v -> v.contains(current))
                 .collect(SuggestionResult.collector());
     }
 }
