@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,16 +19,15 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @since 0.1.0
  */
+@Getter
 public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Getter
     private static ItemizePlugin instance;
     { instance = this; }
 
-    @Getter
     private final Map<Identifier, ItemizeItem> registry = new ConcurrentHashMap<>();
 
-    @Getter
     private final Map<Identifier, ItemizeItem> minecraftRegistry;
     {
         ImmutableMap.Builder<Identifier, ItemizeItem> builder = ImmutableMap.builder();
@@ -39,9 +39,12 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
         this.minecraftRegistry = builder.build();
     }
 
+    private final Map<Identifier, ItemizeItem> combinedRegistry = new HashMap<>(this.minecraftRegistry);
+
     @Override
     public void register(@NotNull Identifier identifier, @NotNull ItemizeItem item) {
         this.registry.put(identifier, item);
+        this.combinedRegistry.put(identifier, item);
     }
 
     @Override

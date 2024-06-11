@@ -68,7 +68,7 @@ public final class Identifier {
     }
 
     @Nullable
-    public static Identifier fromString(@NotNull String string, @Nullable Plugin defaultNamespace) {
+    public static Identifier fromString(@NotNull String string, @Nullable String defaultNamespace) {
         if (string.trim().isEmpty()) {
             return null;
         }
@@ -78,7 +78,7 @@ public final class Identifier {
             return null;
         }
 
-        String namespace = split.length == 2 ? split[0] : defaultNamespace == null ? null : defaultNamespace.getName();
+        String namespace = split.length == 2 ? split[0] : defaultNamespace;
         String key = split.length == 2 ? split[1] : split[0];
         if (!isValidNamespace(namespace) || !isValidKey(key)) {
             return null;
@@ -88,8 +88,13 @@ public final class Identifier {
     }
 
     @Nullable
+    public static Identifier fromString(@NotNull String string, @Nullable Plugin defaultNamespace) {
+        return fromString(string, defaultNamespace == null ? null : defaultNamespace.getName());
+    }
+
+    @Nullable
     public static Identifier fromString(@NotNull String key) {
-        return fromString(key, null);
+        return fromString(key, (String) null);
     }
 
     private static boolean isValidNamespaceChar(char c) {

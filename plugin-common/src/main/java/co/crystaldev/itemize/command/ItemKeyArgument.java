@@ -1,6 +1,7 @@
 package co.crystaldev.itemize.command;
 
 import co.crystaldev.alpinecore.framework.command.AlpineArgumentResolver;
+import co.crystaldev.itemize.ItemizeConfig;
 import co.crystaldev.itemize.ItemizePlugin;
 import co.crystaldev.itemize.api.Identifier;
 import dev.rollczi.litecommands.argument.Argument;
@@ -21,15 +22,15 @@ final class ItemKeyArgument extends AlpineArgumentResolver<Identifier> {
     @Override
     protected ParseResult<Identifier> parse(Invocation<CommandSender> invocation, Argument<Identifier> context, String argument) {
         int index = argument.indexOf(':');
-        if (index == -1 || index != argument.lastIndexOf(':')) {
-            return ParseResult.failure("<red>Invalid delegate provided");
+        if (index != -1 && index != argument.lastIndexOf(':')) {
+            return ParseResult.failure(ItemizeConfig.getInstance().invalidDelegateMessage.buildString(ItemizePlugin.getInstance()));
         }
 
         // ensure the key is valid
         ItemizePlugin itemize = ItemizePlugin.getInstance();
-        Identifier key = Identifier.fromString(argument);
+        Identifier key = Identifier.fromString(argument, Identifier.MINECRAFT);
         if (key == null || !itemize.contains(key)) {
-            return ParseResult.failure("<red>Unregistered or invalid delegate provided");
+            return ParseResult.failure(ItemizeConfig.getInstance().invalidItemMessage.buildString(ItemizePlugin.getInstance()));
         }
 
         return ParseResult.success(key);
@@ -38,7 +39,7 @@ final class ItemKeyArgument extends AlpineArgumentResolver<Identifier> {
     @Override
     public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<Identifier> argument, SuggestionContext context) {
         String current = context.getCurrent().lastLevel().toLowerCase();
-        return ItemizePlugin.getInstance().getRegistry().keySet()
+        return ItemizePlugin.getInstance().getCombinedRegistry().keySet()
                 .stream()
                 .map(Identifier::toString)
                 .filter(v -> v.startsWith(current))
