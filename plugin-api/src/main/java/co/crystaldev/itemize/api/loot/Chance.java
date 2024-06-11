@@ -20,7 +20,7 @@ public final class Chance {
 
     public int getCount() {
         switch (this.type) {
-            case RANGE: return (int) (this.random.nextInt((int) (this.value2 - this.value1)) + this.value1);
+            case RANGE: return (int) (Math.round(this.random.nextDouble() * (int) (this.value2 - this.value1)) + this.value1);
             case CHANCE: return this.random.nextDouble() < this.value1 ? 1 : 0;
             default: return (int) this.value1;
         }
