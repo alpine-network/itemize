@@ -11,8 +11,7 @@ import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 06/11/2024
+ * @since 0.1.0
  */
 final class ItemKeyArgument extends AlpineArgumentResolver<Identifier> {
     public ItemKeyArgument() {

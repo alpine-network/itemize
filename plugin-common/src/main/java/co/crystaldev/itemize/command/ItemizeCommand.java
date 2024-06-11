@@ -16,8 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Optional;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 04/07/2024
+ * @since 0.1.0
  */
 @Command(name = "itemize")
 @Description("The primary command for Itemize")

@@ -16,8 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 04/07/2024
+ * @since 0.1.0
  */
 public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 

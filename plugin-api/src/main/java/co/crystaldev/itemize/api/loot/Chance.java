@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 /**
- * @since 1.1.0
+ * @since 0.1.0
  */
 @AllArgsConstructor @NoArgsConstructor
 public final class Chance {

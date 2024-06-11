@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 /**
- * @since 1.0.0
+ * @since 0.1.0
  */
 @AllArgsConstructor
 final class WrappedItemStack implements ItemizeItem {

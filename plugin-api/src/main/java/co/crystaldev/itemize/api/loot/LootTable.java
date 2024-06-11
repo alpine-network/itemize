@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.function.Function;
 
 /**
- * @since 1.1.0
+ * @since 0.1.0
  */
 @Configuration @SerializeWith(serializer = LootTable.Adapter.class)
 @NoArgsConstructor

@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * Defines the primary interface for interacting with the Itemize API.
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
 public interface Itemize {
 

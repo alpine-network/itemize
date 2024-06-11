@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * @since 1.0.0
+ * @since 0.1.0
  */
 @UtilityClass
 final class Reference {

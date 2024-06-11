@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 /**
- * @since 1.1.0
+ * @since 0.1.0
  * @see org.bukkit.NamespacedKey
  */
 @Getter

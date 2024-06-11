@@ -14,7 +14,7 @@ import java.util.Optional;
 /**
  * Represents a configuration item used in the Itemize system.
  *
- * @since 1.0.2
+ * @since 0.1.0
  */
 @NoArgsConstructor
 @Configuration @SerializeWith(serializer = ConfigItemizeItem.Adapter.class)

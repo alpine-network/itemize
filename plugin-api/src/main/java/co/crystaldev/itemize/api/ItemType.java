@@ -1,7 +1,7 @@
 package co.crystaldev.itemize.api;
 
 /**
- * @since 1.1.0
+ * @since 0.1.0
  */
 public enum ItemType {
     ITEM_STACK,
