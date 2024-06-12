@@ -34,7 +34,7 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
             return ParseResult.failure(ItemizeConfig.getInstance().invalidItemMessage.buildString(ItemizePlugin.getInstance()));
         }
 
-        return ParseResult.success(itemize.getRegistry().get(key));
+        return ParseResult.success(itemize.fetch(key));
     }
 
     @Override
