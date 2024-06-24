@@ -55,7 +55,6 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Override
     public @NotNull Optional<Identifier> get(@NotNull ItemStack itemStack) {
-        // TODO: remove optional
         for (Map.Entry<Identifier, ItemizeItem> entry : this.registry.entrySet()) {
             Identifier key = entry.getKey();
             ItemizeItem value = entry.getValue();
@@ -65,7 +64,8 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
             }
         }
 
-        return Optional.of(Identifier.minecraft(XMaterial.matchXMaterial(itemStack).name().toLowerCase()));
+        Identifier identifier = Identifier.minecraft(XMaterial.matchXMaterial(itemStack).name().toLowerCase());
+        return Optional.ofNullable(this.matches(identifier, itemStack) ? identifier : null);
     }
 
     @Override
