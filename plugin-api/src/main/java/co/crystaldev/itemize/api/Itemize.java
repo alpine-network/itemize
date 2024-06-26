@@ -1,5 +1,6 @@
 package co.crystaldev.itemize.api;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public interface Itemize {
      */
     @NotNull
     static Itemize get() {
-        return Reference.ITEMIZE;
+        return (Itemize) Bukkit.getPluginManager().getPlugin("Itemize");
     }
 
     /**
