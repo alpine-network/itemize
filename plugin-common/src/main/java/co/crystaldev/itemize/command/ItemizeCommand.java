@@ -36,7 +36,17 @@ final class ItemizeCommand extends AlpineCommand {
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
             @Arg("amount") Optional<Integer> amount
     ) {
-        PlayerInventory inventory = player.getInventory();
+        this.execute(player, player, item, amount);
+    }
+
+    @Execute
+    public void execute(
+            @Context Player player,
+            @Arg Player recipient,
+            @Arg("type") @Key("itemizeItem") ItemizeItem item,
+            @Arg("amount") Optional<Integer> amount
+    ) {
+        PlayerInventory inventory = recipient.getInventory();
         for (int i = 0; i < amount.orElse(1); i++) {
             // each item could be unique; query each item individually
             inventory.addItem(item.getItem());
