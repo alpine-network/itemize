@@ -23,6 +23,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal() // TODO: remove when AlpineCore 0.4.0 is released
         maven("https://repo.panda-lang.org/releases")
         maven("https://lib.alpn.cloud/alpine-public/")
         maven("https://repo.papermc.io/repository/maven-public/")
@@ -31,7 +32,7 @@ allprojects {
     configurations.create("shaded")
     dependencies {
         compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
-        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.3.6")
+        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.0")
 
         compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
         annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.30")

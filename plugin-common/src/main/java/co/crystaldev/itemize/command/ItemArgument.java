@@ -12,6 +12,11 @@ import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
+
 /**
  * @since 0.1.0
  */
@@ -27,9 +32,22 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
             return ParseResult.failure(ItemizeConfig.getInstance().invalidDelegateMessage.buildString(ItemizePlugin.getInstance()));
         }
 
-        // ensure the key is valid
         ItemizePlugin itemize = ItemizePlugin.getInstance();
         Identifier key = Identifier.fromString(argument, Identifier.MINECRAFT);
+        if (key != null && itemize.getMinecraftRegistry().containsKey(key)) {
+            return ParseResult.success(itemize.getMinecraftRegistry().get(key));
+        }
+
+        // no namespace was provided, and it also failed to match against MC identifiers
+        // iterate over our identifiers
+        if (index == -1) {
+            for (Identifier next : itemize.keys()) {
+                if (next.toString().equals(argument) || next.getKey().equals(argument)) {
+                    return ParseResult.success(itemize.fetch(next));
+                }
+            }
+        }
+
         if (key == null || !itemize.contains(key)) {
             return ParseResult.failure(ItemizeConfig.getInstance().invalidItemMessage.buildString(ItemizePlugin.getInstance()));
         }
@@ -39,11 +57,26 @@ final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
 
     @Override
     public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<ItemizeItem> argument, SuggestionContext context) {
-        String current = context.getCurrent().lastLevel().toLowerCase();
-        return ItemizePlugin.getInstance().getCombinedRegistry().keySet()
-                .stream()
-                .map(Identifier::toString)
-                .filter(v -> v.contains(current))
-                .collect(SuggestionResult.collector());
+        String current = context.getCurrent().multilevel().toLowerCase();
+
+        Set<String> suggestions = new HashSet<>();
+        for (Identifier identifier : ItemizePlugin.getInstance().getCombinedRegistry().keySet()) {
+            if (current.isEmpty()) {
+                suggestions.add(identifier.toString());
+            }
+            else {
+                String name = identifier.toString();
+                if (name.contains(current)) {
+                    suggestions.add(name);
+                }
+
+                name = identifier.getKey();
+                if (name.contains(current)) {
+                    suggestions.add(name);
+                }
+            }
+        }
+
+        return SuggestionResult.of(suggestions);
     }
 }

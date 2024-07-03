@@ -2,6 +2,9 @@ package co.crystaldev.itemize.command;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.alpinecore.framework.command.AlpineCommand;
+import co.crystaldev.alpinecore.util.ItemHelper;
+import co.crystaldev.alpinecore.util.Messaging;
+import co.crystaldev.itemize.ItemizeConfig;
 import co.crystaldev.itemize.api.ItemizeItem;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
@@ -10,6 +13,7 @@ import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.description.Description;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -37,5 +41,10 @@ final class ItemizeCommand extends AlpineCommand {
             // each item could be unique; query each item individually
             inventory.addItem(item.getItem());
         }
+
+        ItemizeConfig config = ItemizeConfig.getInstance();
+        Component message = config.giveMessage.build(this.plugin, "amount", amount.orElse(1),
+                "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
+        Messaging.send(player, message);
     }
 }
