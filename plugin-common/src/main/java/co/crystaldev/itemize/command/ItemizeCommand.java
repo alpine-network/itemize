@@ -42,7 +42,7 @@ final class ItemizeCommand extends AlpineCommand {
     @Execute
     public void execute(
             @Context Player player,
-            @Arg Player recipient,
+            @Arg("recipient") Player recipient,
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
             @Arg("amount") Optional<Integer> amount
     ) {
