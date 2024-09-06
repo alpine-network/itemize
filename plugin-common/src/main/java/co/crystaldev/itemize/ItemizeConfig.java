@@ -30,6 +30,7 @@ public final class ItemizeConfig extends AlpineConfig {
             " ",
             "registry:",
             "  custom_drops:mysterious_essence:",
+            "    type: ROTTEN_FLESH",
             "    name: <gold>Mysterious Essence",
             "    lore:",
             "      - This is one seriously <i>mysterious</i> item...",
