@@ -32,9 +32,12 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     {
         ImmutableMap.Builder<Identifier, ItemizeItem> builder = ImmutableMap.builder();
         for (XMaterial value : XMaterial.values()) {
-            if (value.isSupported()) {
-                builder.put(Identifier.minecraft(value.name().toLowerCase()), ItemizeItem.fromItem(value.parseItem()));
+            ItemStack item;
+            if (!value.isSupported() || (item = value.parseItem()) == null || !ItemHelper.isItem(item.getType())) {
+                continue;
             }
+
+            builder.put(Identifier.minecraft(value.name().toLowerCase()), ItemizeItem.fromItem(item));
         }
         this.minecraftRegistry = builder.build();
     }
