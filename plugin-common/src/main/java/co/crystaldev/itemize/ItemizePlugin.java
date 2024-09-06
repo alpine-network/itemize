@@ -45,6 +45,15 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     private final Map<Identifier, ItemizeItem> combinedRegistry = new HashMap<>(this.minecraftRegistry);
 
     @Override
+    public void onStart() {
+        ItemizeConfig config = ItemizeConfig.getInstance();
+        config.registry.forEach((identifier, item) -> {
+            Identifier id = Identifier.fromString(identifier, this);
+            this.register(id, ItemizeItem.fromItem(item.build(this)));
+        });
+    }
+
+    @Override
     public void register(@NotNull Identifier identifier, @NotNull ItemizeItem item) {
         this.registry.put(identifier, item);
         this.combinedRegistry.put(identifier, item);
