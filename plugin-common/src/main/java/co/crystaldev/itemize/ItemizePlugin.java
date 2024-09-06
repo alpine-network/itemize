@@ -7,6 +7,7 @@ import co.crystaldev.itemize.api.ItemizeItem;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,12 +33,12 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     {
         ImmutableMap.Builder<Identifier, ItemizeItem> builder = ImmutableMap.builder();
         for (XMaterial value : XMaterial.values()) {
-            ItemStack item;
-            if (!value.isSupported() || (item = value.parseItem()) == null || !ItemHelper.isItem(item.getType())) {
+            Material type;
+            if (!value.isSupported() || (type = value.parseMaterial()) == null || !ItemHelper.isItem(type)) {
                 continue;
             }
 
-            builder.put(Identifier.minecraft(value.name().toLowerCase()), ItemizeItem.fromItem(item));
+            builder.put(Identifier.minecraft(value.name().toLowerCase()), ItemizeItem.fromItem(value.parseItem()));
         }
         this.minecraftRegistry = builder.build();
     }
