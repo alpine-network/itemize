@@ -5,8 +5,7 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 09/06/2024
+ * @since 0.1.0
  */
 final class ItemHelper {
     public static boolean isItem(@NotNull Material material) {
