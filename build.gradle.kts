@@ -31,7 +31,7 @@ allprojects {
     configurations.create("shaded")
     dependencies {
         compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
-        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.6")
+        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.9")
 
         compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
         annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.30")
