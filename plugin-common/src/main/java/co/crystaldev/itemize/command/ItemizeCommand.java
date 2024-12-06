@@ -14,7 +14,9 @@ import dev.rollczi.litecommands.annotations.description.Description;
 import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import net.kyori.adventure.text.Component;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Optional;
@@ -41,19 +43,26 @@ final class ItemizeCommand extends AlpineCommand {
 
     @Execute
     public void execute(
-            @Context Player player,
+            @Context CommandSender player,
             @Arg("recipient") Player recipient,
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
             @Arg("amount") Optional<Integer> amount
     ) {
         PlayerInventory inventory = recipient.getInventory();
-        for (int i = 0; i < amount.orElse(1); i++) {
-            // each item could be unique; query each item individually
-            inventory.addItem(item.getItem());
+
+        int remaining = Math.max(1, amount.orElse(1));
+        while (remaining > 0) {
+            int stackSize = Math.min(remaining, item.getMaxStackSize());
+            remaining -= stackSize;
+
+            ItemStack builtItem = item.getItem();
+            builtItem.setAmount(stackSize);
+            inventory.addItem(builtItem);
         }
 
         ItemizeConfig config = ItemizeConfig.getInstance();
-        Component message = config.giveMessage.build(this.plugin, "amount", amount.orElse(1),
+        Component message = config.giveMessage.build(this.plugin, recipient,
+                "amount", amount.orElse(1),
                 "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
         Messaging.send(player, message);
     }
