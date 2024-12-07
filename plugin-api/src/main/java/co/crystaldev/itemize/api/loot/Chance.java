@@ -27,7 +27,7 @@ public final class Chance {
     }
 
     @NotNull
-    Object serialize() {
+    public Object serialize() {
         switch (this.type) {
             case RANGE: return ((int) this.value1) + ".." + ((int) this.value2);
             case CHANCE: return this.value1;
@@ -36,7 +36,7 @@ public final class Chance {
     }
 
     @NotNull
-    static Chance deserialize(@NotNull Object element) {
+    public static Chance deserialize(@NotNull Object element) {
         if (element instanceof String) {
             String[] split = ((String) element).split("\\.\\.");
             if (split.length == 2) {

@@ -6,6 +6,7 @@ import co.crystaldev.alpinecore.util.ItemHelper;
 import co.crystaldev.alpinecore.util.Messaging;
 import co.crystaldev.itemize.ItemizeConfig;
 import co.crystaldev.itemize.api.ItemizeItem;
+import co.crystaldev.itemize.api.loot.Chance;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -63,6 +64,33 @@ final class ItemizeCommand extends AlpineCommand {
         ItemizeConfig config = ItemizeConfig.getInstance();
         Component message = config.giveMessage.build(this.plugin, recipient,
                 "amount", amount.orElse(1),
+                "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
+        Messaging.send(player, message);
+    }
+
+    @Execute(name = "rng")
+    public void rng(
+            @Context CommandSender player,
+            @Arg("recipient") Player recipient,
+            @Arg("type") @Key("itemizeItem") ItemizeItem item,
+            @Arg("amount") @Key("itemizeChance") Chance chance
+    ) {
+        PlayerInventory inventory = recipient.getInventory();
+
+        int giveAmount = Math.max(1, chance.getCount());
+        int remaining = giveAmount;
+        while (remaining > 0) {
+            int stackSize = Math.min(remaining, item.getMaxStackSize());
+            remaining -= stackSize;
+
+            ItemStack builtItem = item.getItem();
+            builtItem.setAmount(stackSize);
+            inventory.addItem(builtItem);
+        }
+
+        ItemizeConfig config = ItemizeConfig.getInstance();
+        Component message = config.giveMessage.build(this.plugin, recipient,
+                "amount", giveAmount,
                 "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
         Messaging.send(player, message);
     }

@@ -13,14 +13,12 @@ import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 
 /**
  * @since 0.1.0
  */
-final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
+public final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
     public ItemArgument() {
         super(ItemizeItem.class, "itemizeItem");
     }
