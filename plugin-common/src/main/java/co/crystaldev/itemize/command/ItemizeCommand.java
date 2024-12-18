@@ -61,11 +61,14 @@ final class ItemizeCommand extends AlpineCommand {
             inventory.addItem(builtItem);
         }
 
-        ItemizeConfig config = ItemizeConfig.getInstance();
-        Component message = config.giveMessage.build(this.plugin, recipient,
-                "amount", amount.orElse(1),
-                "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
-        Messaging.send(player, message);
+        if (player instanceof Player) {
+            ItemizeConfig config = ItemizeConfig.getInstance();
+            Component message = (player.equals(recipient) ? config.giveMessage : config.giveOtherMessage).build(this.plugin,
+                    recipient, (Player) player,
+                    "amount", amount.orElse(1),
+                    "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
+            Messaging.send(player, message);
+        }
     }
 
     @Execute(name = "rng")
@@ -88,10 +91,13 @@ final class ItemizeCommand extends AlpineCommand {
             inventory.addItem(builtItem);
         }
 
-        ItemizeConfig config = ItemizeConfig.getInstance();
-        Component message = config.giveMessage.build(this.plugin, recipient,
-                "amount", giveAmount,
-                "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
-        Messaging.send(player, message);
+        if (player instanceof Player) {
+            ItemizeConfig config = ItemizeConfig.getInstance();
+            Component message = (player.equals(recipient) ? config.giveMessage : config.giveOtherMessage).build(this.plugin,
+                    recipient, (Player) player,
+                    "amount", giveAmount,
+                    "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
+            Messaging.send(player, message);
+        }
     }
 }
