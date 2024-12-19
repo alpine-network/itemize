@@ -11,6 +11,7 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +19,13 @@ import java.util.Set;
 /**
  * @since 0.1.0
  */
-public final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
-    public ItemArgument() {
-        super(ItemizeItem.class, "itemizeItem");
+public class ItemizeItemArgument extends AlpineArgumentResolver<ItemizeItem> {
+    public ItemizeItemArgument(@Nullable String key) {
+        super(ItemizeItem.class, key);
+    }
+
+    public ItemizeItemArgument() {
+        this(null);
     }
 
     @Override
@@ -76,5 +81,11 @@ public final class ItemArgument extends AlpineArgumentResolver<ItemizeItem> {
         }
 
         return SuggestionResult.of(suggestions);
+    }
+
+    public static final class ItemArgument extends ItemizeItemArgument {
+        public ItemArgument() {
+            super("itemizeItem");
+        }
     }
 }
