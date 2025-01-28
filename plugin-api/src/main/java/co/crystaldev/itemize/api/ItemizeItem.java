@@ -1,10 +1,15 @@
 package co.crystaldev.itemize.api;
 
+import co.crystaldev.itemize.api.type.item.SuppliedItemStack;
+import co.crystaldev.itemize.api.type.item.WrappedItemStack;
+import co.crystaldev.itemize.api.type.item.WrappedStatusEffects;
 import com.google.common.collect.ImmutableSet;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -19,25 +24,48 @@ public interface ItemizeItem {
      * Retrieves the item type for this item.
      *
      * @return The item type.
+     * @deprecated since 0.2.0. Being removed in a future version
      */
-    @NotNull
-    ItemType getType();
+    @Deprecated
+    default @NotNull ItemType getType() {
+        return ItemType.ITEM_STACK;
+    }
 
     /**
      * Retrieves the underlying {@link ItemStack} associated with this item.
      *
      * @return The {@link ItemStack} representation of this item.
      */
-    @NotNull
-    ItemStack getItem();
+    @NotNull ItemStack getItem();
+
+    /**
+     * Retrieves the underlying {@link ItemStack} associated with this item.
+     *
+     * @param amount The item amount.
+     * @return The items.
+     */
+    default @NotNull List<ItemStack> getItem(int amount) {
+        List<ItemStack> items = new ArrayList<>();
+
+        int remaining = Math.max(0, amount);
+        while (remaining > 0) {
+            int stackSize = Math.min(remaining, this.getMaxStackSize());
+            remaining -= stackSize;
+
+            ItemStack builtItem = this.getItem();
+            builtItem.setAmount(stackSize);
+            items.add(builtItem);
+        }
+
+        return items;
+    }
 
     /**
      * Retrieves the {@link ItemStack} used to represent this item.
      *
      * @return The display {@link ItemStack}.
      */
-    @NotNull
-    default ItemStack getDisplayItem() {
+    default @NotNull ItemStack getDisplayItem() {
         return this.getItem();
     }
 
@@ -45,9 +73,12 @@ public interface ItemizeItem {
      * Retrieves a set of {@link PotionEffect} associated with this item.
      *
      * @return The potion effects.
+     * @deprecated since 0.2.0. Being removed in a future version
      */
-    @NotNull
-    Set<PotionEffect> getEffects();
+    @Deprecated
+    default @NotNull Set<PotionEffect> getEffects() {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Compares the specified {@link ItemStack} with this item to determine if they match.
@@ -64,18 +95,19 @@ public interface ItemizeItem {
      */
     int getMaxStackSize();
 
-    @NotNull
-    static ItemizeItem fromItem(@NotNull ItemStack itemStack) {
+    static @NotNull ItemizeItem fromItem(@NotNull ItemStack itemStack) {
         return new WrappedItemStack(itemStack);
     }
 
-    @NotNull
-    static ItemizeItem fromEffects(@NotNull Iterable<PotionEffect> effects) {
+    /**
+     * @deprecated since 0.2.0. Being removed in a future version
+     */
+    @Deprecated
+    static @NotNull ItemizeItem fromEffects(@NotNull Iterable<PotionEffect> effects) {
         return new WrappedStatusEffects(ImmutableSet.copyOf(effects));
     }
 
-    @NotNull
-    static ItemizeItem fromSupplier(@NotNull Supplier<ItemStack> itemStackSupplier) {
+    static @NotNull ItemizeItem fromSupplier(@NotNull Supplier<ItemStack> itemStackSupplier) {
         return new SuppliedItemStack(itemStackSupplier);
     }
 }

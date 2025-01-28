@@ -34,8 +34,7 @@ public final class LootTable {
         this.items = new LinkedHashMap<>(items);
     }
 
-    @NotNull
-    public List<ItemStack> getItems(int amount, @Nullable Function<ItemStack, ItemStack> itemFunction) {
+    public @NotNull List<ItemStack> getItems(int amount, @Nullable Function<ItemStack, ItemStack> itemFunction) {
         List<ItemStack> items = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             this.items.forEach((item, chance) -> {
@@ -50,18 +49,15 @@ public final class LootTable {
         return items;
     }
 
-    @NotNull
-    public List<ItemStack> getItems(int amount) {
+    public @NotNull List<ItemStack> getItems(int amount) {
         return this.getItems(amount, null);
     }
 
-    @NotNull
-    public List<ItemStack> getItems(@Nullable Function<ItemStack, ItemStack> itemFunction) {
+    public @NotNull List<ItemStack> getItems(@Nullable Function<ItemStack, ItemStack> itemFunction) {
         return this.getItems(1, itemFunction);
     }
 
-    @NotNull
-    public List<ItemStack> getItems() {
+    public @NotNull List<ItemStack> getItems() {
         return this.getItems(1, null);
     }
 

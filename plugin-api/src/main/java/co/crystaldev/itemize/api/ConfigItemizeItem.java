@@ -1,5 +1,6 @@
 package co.crystaldev.itemize.api;
 
+import co.crystaldev.itemize.api.type.item.WrappedItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import de.exlll.configlib.Configuration;
 import de.exlll.configlib.SerializeWith;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * Represents a configuration item used in the Itemize system.
+ * Represents a configurable item used in the Itemize system.
  *
  * @since 0.1.0
  */
@@ -34,8 +35,7 @@ public final class ConfigItemizeItem {
      * @return The ItemizeItem defined by this ConfigItemizeItem.
      * @throws IllegalStateException If the item type is unsupported or invalid.
      */
-    @NotNull
-    public ItemizeItem get() {
+    public @NotNull ItemizeItem get() {
         if (this.cachedItem != null) {
             return this.cachedItem;
         }
@@ -62,8 +62,7 @@ public final class ConfigItemizeItem {
      * @return The ItemStack representation of this item.
      * @throws IllegalStateException If the item type is unsupported or invalid.
      */
-    @NotNull
-    public ItemStack getItem() {
+    public @NotNull ItemStack getItem() {
         return this.get().getItem();
     }
 
@@ -73,8 +72,7 @@ public final class ConfigItemizeItem {
      * @return The identifier of the item.
      * @throws IllegalStateException If the item type is unsupported or invalid.
      */
-    @NotNull
-    public Identifier getIdentifier() {
+    public @NotNull Identifier getIdentifier() {
         if (this.value instanceof Identifier) {
             return (Identifier) this.value;
         }
@@ -92,8 +90,7 @@ public final class ConfigItemizeItem {
      * @return The identifier of the item.
      * @throws IllegalStateException If the item type is unsupported or invalid.
      */
-    @NotNull
-    public String asString() {
+    public @NotNull String asString() {
         if (this.value instanceof Identifier) {
             return this.value.toString();
         }
@@ -105,39 +102,34 @@ public final class ConfigItemizeItem {
         }
     }
 
-    @NotNull
-    public static ConfigItemizeItem of(@NotNull Identifier key) {
+    public static @NotNull ConfigItemizeItem of(@NotNull Identifier key) {
         return new ConfigItemizeItem(key);
     }
 
-    @NotNull
-    public static ConfigItemizeItem of(@NotNull String key) {
+    public static @NotNull ConfigItemizeItem of(@NotNull String key) {
         if (key.startsWith("minecraft:")) {
             XMaterial resolved = XMaterial
                     .matchXMaterial(key.substring("minecraft:".length()).toUpperCase())
                     .map(v -> !v.isSupported() ? null : v)
-                    .orElseThrow(() -> new IllegalStateException("Unknown or unsupported type: " + key));
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown or unsupported type: " + key));
             return of(resolved);
         }
 
         return Optional
                 .ofNullable(Identifier.fromString(key))
                 .map(ConfigItemizeItem::of)
-                .orElseThrow(() -> new IllegalStateException("Invalid identifier: " + key));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid identifier: " + key));
     }
 
-    @NotNull
-    public static ConfigItemizeItem of(@NotNull XMaterial material) {
+    public static @NotNull ConfigItemizeItem of(@NotNull XMaterial material) {
         return new ConfigItemizeItem(material);
     }
 
-    @NotNull
-    public static ConfigItemizeItem of(@NotNull Material material) {
+    public static @NotNull ConfigItemizeItem of(@NotNull Material material) {
         return of(XMaterial.matchXMaterial(material));
     }
 
-    @NotNull
-    public static ConfigItemizeItem of(@NotNull ItemStack itemStack) {
+    public static @NotNull ConfigItemizeItem of(@NotNull ItemStack itemStack) {
         return of(XMaterial.matchXMaterial(itemStack));
     }
 
@@ -156,7 +148,7 @@ public final class ConfigItemizeItem {
             if (!element.contains(":")) {
                 Optional<XMaterial> resolved = XMaterial.matchXMaterial(element.toUpperCase());
                 if (!resolved.isPresent()) {
-                    throw new IllegalStateException("unable to resolve ItemizeItem type \"" + element + "\"");
+                    throw new IllegalArgumentException("unable to resolve ItemizeItem type \"" + element + "\"");
                 }
 
                 return new ConfigItemizeItem(resolved.get());
@@ -164,7 +156,7 @@ public final class ConfigItemizeItem {
             else {
                 Identifier key = Identifier.fromString(element);
                 if (key == null) {
-                    throw new IllegalStateException("unable to resolve malformed ItemizeItem key \"" + element + "\"");
+                    throw new IllegalArgumentException("unable to resolve malformed ItemizeItem key \"" + element + "\"");
                 }
 
                 return new ConfigItemizeItem(key);

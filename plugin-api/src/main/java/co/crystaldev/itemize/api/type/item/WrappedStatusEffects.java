@@ -1,5 +1,7 @@
-package co.crystaldev.itemize.api;
+package co.crystaldev.itemize.api.type.item;
 
+import co.crystaldev.itemize.api.ItemType;
+import co.crystaldev.itemize.api.ItemizeItem;
 import lombok.AllArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -9,9 +11,11 @@ import java.util.Set;
 
 /**
  * @since 0.1.0
+ * @deprecated since 0.2.0. Being removed in a future version
  */
 @AllArgsConstructor
-final class WrappedStatusEffects implements ItemizeItem {
+@Deprecated
+public final class WrappedStatusEffects implements ItemizeItem {
 
     private final Set<PotionEffect> effects;
 

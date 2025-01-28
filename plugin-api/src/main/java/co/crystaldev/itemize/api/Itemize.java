@@ -19,16 +19,17 @@ public interface Itemize {
      *
      * @return The Itemize instance.
      */
-    @NotNull
-    static Itemize get() {
+    static @NotNull Itemize get() {
         return (Itemize) Bukkit.getPluginManager().getPlugin("Itemize");
     }
+
+    // region Item
 
     /**
      * Registers an item with the given identifier.
      *
      * @param identifier The unique identifier for the item.
-     * @param item       The item properties to be registered.
+     * @param item       The item to be registered.
      */
     void register(@NotNull Identifier identifier, @NotNull ItemizeItem item);
 
@@ -38,8 +39,7 @@ public interface Itemize {
      * @param identifier The unique identifier for the item.
      * @return An {@link Optional} containing the item if present.
      */
-    @NotNull
-    Optional<ItemizeItem> get(@NotNull Identifier identifier);
+    @NotNull Optional<ItemizeItem> get(@NotNull Identifier identifier);
 
     /**
      * Retrieves the {@link Identifier} associated with the given {@link ItemStack}.
@@ -47,8 +47,7 @@ public interface Itemize {
      * @param itemStack The {@link ItemStack} to retrieve the identifier for.
      * @return The identifier if present.
      */
-    @NotNull
-    Optional<Identifier> get(@NotNull ItemStack itemStack);
+    @NotNull Optional<Identifier> get(@NotNull ItemStack itemStack);
 
     /**
      * Retrieves an item associated with the given identifier.
@@ -56,8 +55,7 @@ public interface Itemize {
      * @param identifier The unique identifier for the item.
      * @return The item if present.
      */
-    @Nullable
-    ItemizeItem fetch(@NotNull Identifier identifier);
+    @Nullable ItemizeItem fetch(@NotNull Identifier identifier);
 
     /**
      * Checks if the item associated with the given identifier matches the provided item.
@@ -80,6 +78,58 @@ public interface Itemize {
      *
      * @return All registered item identifiers.
      */
-    @NotNull
-    Iterable<Identifier> keys();
+    @NotNull Iterable<Identifier> keys();
+
+    // endregion Item
+
+    // region Reward
+
+    /**
+     * Registers a reward with the given identifier.
+     *
+     * @param identifier The unique identifier for the reward.
+     * @param reward     The reward to be registered.
+     */
+    void register(@NotNull Identifier identifier, @NotNull ItemizeReward reward);
+
+    /**
+     * Retrieves the unique identifier associated with the given reward.
+     *
+     * @param reward The {@link ItemizeReward} to retrieve the identifier for.
+     * @return The identifier if present.
+     */
+    @NotNull Optional<Identifier> getReward(@NotNull ItemizeReward reward);
+
+    /**
+     * Retrieves a reward associated with the given identifier.
+     *
+     * @param identifier The unique identifier for the reward.
+     * @return An {@link Optional} containing the reward if present.
+     */
+    @NotNull Optional<ItemizeReward> getReward(@NotNull Identifier identifier);
+
+    /**
+     * Retrieves a reward associated with the given identifier.
+     *
+     * @param identifier The unique identifier for the reward.
+     * @return The reward if present.
+     */
+    @Nullable ItemizeReward fetchReward(@NotNull Identifier identifier);
+
+    /**
+     * Checks if there is a reward registered with the given identifier.
+     *
+     * @param identifier The unique identifier to query.
+     * @return Whether there is a reward associated with the provided identifier.
+     */
+    boolean containsReward(@NotNull Identifier identifier);
+
+    /**
+     * Retrieves an iterable collection of all registered reward identifiers.
+     *
+     * @return All registered reward identifiers.
+     */
+    @NotNull Iterable<Identifier> rewardKeys();
+
+    // endregion Reward
 }

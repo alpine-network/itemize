@@ -1,24 +1,25 @@
-package co.crystaldev.itemize.api;
+package co.crystaldev.itemize.api.type.item;
 
+import co.crystaldev.itemize.api.ItemType;
+import co.crystaldev.itemize.api.ItemizeItem;
 import lombok.AllArgsConstructor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
-import java.util.function.Supplier;
 
 /**
  * @since 0.1.0
  */
 @AllArgsConstructor
-final class SuppliedItemStack implements ItemizeItem {
+public final class WrappedItemStack implements ItemizeItem {
 
-    private final Supplier<ItemStack> supplier;
+    private final ItemStack itemStack;
 
     @Override
     public @NotNull ItemStack getItem() {
-        return this.supplier.get();
+        return this.itemStack;
     }
 
     @Override
@@ -33,11 +34,11 @@ final class SuppliedItemStack implements ItemizeItem {
 
     @Override
     public boolean matches(@NotNull ItemStack itemStack) {
-        return this.getItem().equals(itemStack);
+        return this.itemStack.isSimilar(itemStack);
     }
 
     @Override
     public int getMaxStackSize() {
-        return this.getItem().getMaxStackSize();
+        return this.itemStack.getMaxStackSize();
     }
 }

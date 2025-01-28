@@ -62,13 +62,11 @@ public final class Identifier {
         return this.namespace + ":" + this.key;
     }
 
-    @NotNull
-    public static Identifier minecraft(@NotNull String key) {
+    public static @NotNull Identifier minecraft(@NotNull String key) {
         return new Identifier(MINECRAFT, key);
     }
 
-    @Nullable
-    public static Identifier fromString(@NotNull String string, @Nullable String defaultNamespace) {
+    public static @Nullable Identifier fromString(@NotNull String string, @Nullable String defaultNamespace) {
         if (string.trim().isEmpty()) {
             return null;
         }
@@ -87,13 +85,11 @@ public final class Identifier {
         return new Identifier(namespace, key);
     }
 
-    @Nullable
-    public static Identifier fromString(@NotNull String string, @Nullable Plugin defaultNamespace) {
+    public static @Nullable Identifier fromString(@NotNull String string, @Nullable Plugin defaultNamespace) {
         return fromString(string, defaultNamespace == null ? null : defaultNamespace.getName());
     }
 
-    @Nullable
-    public static Identifier fromString(@NotNull String key) {
+    public static @Nullable Identifier fromString(@NotNull String key) {
         return fromString(key, (String) null);
     }
 

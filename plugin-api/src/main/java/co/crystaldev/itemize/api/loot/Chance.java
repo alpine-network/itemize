@@ -26,8 +26,7 @@ public final class Chance {
         }
     }
 
-    @NotNull
-    public Object serialize() {
+    public @NotNull Object serialize() {
         switch (this.type) {
             case RANGE: return ((int) this.value1) + ".." + ((int) this.value2);
             case CHANCE: return this.value1;
@@ -35,8 +34,19 @@ public final class Chance {
         }
     }
 
-    @NotNull
-    public static Chance deserialize(@NotNull Object element) {
+    @Override
+    public String toString() {
+        switch (this.type) {
+            case RANGE:
+                return ((int) this.value1) + ":" + ((int) this.value2);
+            case CHANCE:
+                return (Math.round((this.value1 * 100.0) * 100.0) / 100.0) + "%";
+            default:
+                return this.value1 + "x";
+        }
+    }
+
+    public static @NotNull Chance deserialize(@NotNull Object element) {
         if (element instanceof String) {
             String[] split = ((String) element).split("\\.\\.");
             if (split.length == 2) {
@@ -55,18 +65,15 @@ public final class Chance {
         throw new IllegalStateException("invalid drop chance \"" + element + "\"");
     }
 
-    @NotNull
-    public static Chance literal(int amount) {
+    public static @NotNull Chance literal(int amount) {
         return new Chance(amount, 0, Type.LITERAL);
     }
 
-    @NotNull
-    public static Chance range(int min, int max) {
+    public static @NotNull Chance range(int min, int max) {
         return new Chance(min, max, Type.RANGE);
     }
 
-    @NotNull
-    public static Chance chance(double chance) {
+    public static @NotNull Chance chance(double chance) {
         return new Chance(chance, 0, Type.CHANCE);
     }
 
