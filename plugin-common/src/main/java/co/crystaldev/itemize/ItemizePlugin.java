@@ -64,8 +64,8 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
                                 .name("<info>CrustoSugar</info>")
                                 .lore(
                                         "<emphasis>Crafted under <i>unusual circumstances</i>, this</emphasis>",
-                                        "<emphasis>sugar will grant you great discomfort because it is</emphasis>",
-                                        "<emphasis>simply dried cum and dick cheese.</emphasis>"
+                                        "<emphasis>sugar will grant you great discomfort because it</emphasis>",
+                                        "<emphasis>is concrete powder.</emphasis>"
                                 )
                                 .build()
                 ))
