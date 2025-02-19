@@ -42,7 +42,7 @@ public final class Chance {
             case CHANCE:
                 return (Math.round((this.value1 * 100.0) * 100.0) / 100.0) + "%";
             default:
-                return this.value1 + "x";
+                return ((int) this.value1) + "x";
         }
     }
 
