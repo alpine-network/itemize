@@ -128,7 +128,7 @@ final class ItemizeCommand extends AlpineCommand {
     ) {
         PlayerInventory inventory = recipient.getInventory();
 
-        int giveAmount = Math.max(1, chance.getCount());
+        int giveAmount = chance.getCount();
         int remaining = giveAmount;
         while (remaining > 0) {
             int stackSize = Math.min(remaining, item.getMaxStackSize());
@@ -141,10 +141,11 @@ final class ItemizeCommand extends AlpineCommand {
 
         if (player instanceof Player) {
             ItemizeConfig config = ItemizeConfig.getInstance();
-            Component message = (player.equals(recipient) ? config.giveMessage : config.giveOtherMessage).build(this.plugin,
+            Component message = (player.equals(recipient) ? config.rngGiveMessage : config.rngGiveOtherMessage).build(this.plugin,
                     recipient, (Player) player,
                     "amount", giveAmount,
-                    "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
+                    "item", ItemHelper.createHoverComponent(item.getDisplayItem()),
+                    "chance", chance.toString());
             Messaging.send(player, message);
         }
     }

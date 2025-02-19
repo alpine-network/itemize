@@ -59,6 +59,16 @@ public final class ItemizeConfig extends AlpineConfig {
             "<info>Itemize</info> <bracket>»</bracket> Gave %player_name% <highlight>%amount%x %item%</highlight>");
 
     @Comment("")
+    public ConfigMessage rngGiveMessage = ConfigMessage.of(
+            "<info>Itemize</info> <bracket>»</bracket> Received <highlight>%amount%x %item%</highlight> " +
+                    "<bracket>[<emphasis>%chance%</emphasis>]</bracket>");
+
+    @Comment("")
+    public ConfigMessage rngGiveOtherMessage = ConfigMessage.of(
+            "<info>Itemize</info> <bracket>»</bracket> Gave %player_name% <highlight>%amount%x %item%</highlight> " +
+                    "<bracket>[<emphasis>%chance%</emphasis>]</bracket>");
+
+    @Comment("")
     public ConfigMessage rewardMessage = ConfigMessage.of(
             "<info>Itemize</info> <bracket>»</bracket> Awarded a %reward_name%:",
             "%reward_list%"
