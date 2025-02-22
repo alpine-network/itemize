@@ -12,10 +12,16 @@ import java.util.Set;
 /**
  * @since 0.1.0
  */
-@AllArgsConstructor
 public final class WrappedItemStack implements ItemizeItem {
 
     private final ItemStack itemStack;
+
+    public WrappedItemStack(@NotNull ItemStack itemStack) {
+        this.itemStack = itemStack;
+
+        // Force initialize the CraftItemStack
+        this.itemStack.setType(itemStack.getType());
+    }
 
     @Override
     public @NotNull ItemStack getItem() {
