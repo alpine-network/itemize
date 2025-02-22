@@ -5,9 +5,7 @@ import co.crystaldev.alpinecore.framework.command.AlpineCommand;
 import co.crystaldev.alpinecore.util.ItemHelper;
 import co.crystaldev.alpinecore.util.Messaging;
 import co.crystaldev.itemize.ItemizeConfig;
-import co.crystaldev.itemize.api.ItemizeItem;
-import co.crystaldev.itemize.api.ItemizeReward;
-import co.crystaldev.itemize.api.ResultingReward;
+import co.crystaldev.itemize.api.*;
 import co.crystaldev.itemize.api.loot.Chance;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
@@ -64,6 +62,14 @@ final class ItemizeCommand extends AlpineCommand {
                     "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
             Messaging.send(player, message);
         }
+    }
+
+    @Execute(name = "identify")
+    public void identify(@Context Player player) {
+        ItemizeConfig config = ItemizeConfig.getInstance();
+
+        String id = Itemize.get().get(player.getInventory().getItemInMainHand()).map(Identifier::toString).orElse("unknown");
+        Messaging.send(player, config.identifyMessage.build(this.plugin, player, "resolved", id));
     }
 
     @Execute(name = "reward")

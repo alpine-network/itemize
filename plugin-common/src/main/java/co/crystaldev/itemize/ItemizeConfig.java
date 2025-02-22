@@ -51,6 +51,10 @@ public final class ItemizeConfig extends AlpineConfig {
             "<red>Unregistered or invalid delegate provided");
 
     @Comment("")
+    public ConfigMessage identifyMessage = ConfigMessage.of(
+            "<info>Itemize</info> <bracket>»</bracket> Resolved: %resolved%");
+
+    @Comment("")
     public ConfigMessage giveMessage = ConfigMessage.of(
             "<info>Itemize</info> <bracket>»</bracket> Received <highlight>%amount%x %item%</highlight>");
 

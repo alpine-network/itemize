@@ -35,7 +35,7 @@ public final class SuppliedItemStack implements ItemizeItem {
 
     @Override
     public boolean matches(@NotNull ItemStack itemStack) {
-        return this.getItem().equals(itemStack);
+        return ItemSimilarity.isSimilar(this.getItem(), itemStack);
     }
 
     @Override
