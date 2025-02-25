@@ -7,6 +7,7 @@ import co.crystaldev.itemize.api.type.reward.ItemizeItemReward;
 import de.exlll.configlib.Configuration;
 import de.exlll.configlib.SerializeWith;
 import de.exlll.configlib.Serializer;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,7 @@ public final class ConfigItemizeReward {
 
     private Identifier rewardIdentifier;
 
+    @Getter
     private Chance chance;
 
     ConfigItemizeReward(@Nullable ItemizeReward reward, @Nullable Identifier rewardIdentifier, @NotNull Chance chance) {
