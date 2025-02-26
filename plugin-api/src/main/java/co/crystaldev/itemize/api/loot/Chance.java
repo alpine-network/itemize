@@ -38,7 +38,7 @@ public final class Chance {
     public String toString() {
         switch (this.type) {
             case RANGE:
-                return ((int) this.value1) + ":" + ((int) this.value2);
+                return ((int) this.value1) + "-" + ((int) this.value2);
             case CHANCE:
                 return (Math.round((this.value1 * 100.0) * 100.0) / 100.0) + "%";
             default:
