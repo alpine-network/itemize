@@ -24,17 +24,23 @@ import java.util.*;
 @Configuration @SerializeWith(serializer = ConfigItemizeReward.Adapter.class)
 public final class ConfigItemizeReward {
 
+    public static final Identifier UNKNOWN_REWARD = Identifier.fromString("itemize:null_reward");
+
     private ItemizeReward reward;
 
     private Identifier rewardIdentifier;
 
+    private Identifier itemIdentifier;
+
     @Getter
     private Chance chance;
 
-    ConfigItemizeReward(@Nullable ItemizeReward reward, @Nullable Identifier rewardIdentifier, @NotNull Chance chance) {
+    ConfigItemizeReward(@NotNull Chance chance, @Nullable ItemizeReward reward,
+                        @Nullable Identifier rewardIdentifier, @Nullable Identifier itemIdentifier) {
+        this.chance = chance;
         this.reward = reward;
         this.rewardIdentifier = rewardIdentifier;
-        this.chance = chance;
+        this.itemIdentifier = itemIdentifier;
     }
 
     /**
@@ -59,6 +65,10 @@ public final class ConfigItemizeReward {
         if (this.reward != null) {
             return this.reward;
         }
+        else if (this.itemIdentifier != null) {
+            this.reward = ItemizeReward.fromItemize(this.itemIdentifier);
+            return this.reward;
+        }
         else if (this.rewardIdentifier != null) {
             this.reward = Itemize.get().fetchReward(this.rewardIdentifier);
             if (this.reward != null) {
@@ -78,7 +88,11 @@ public final class ConfigItemizeReward {
     public @NotNull Identifier getRewardIdentifier() {
         Identifier identifier = this.resolveRewardIdentifier();
         if (identifier == null) {
-            throw new IllegalStateException("Invalid ItemizeReward provided type");
+            Identifier source = this.rewardIdentifier == null ? this.itemIdentifier : this.rewardIdentifier;
+            if (source == null) {
+                source = UNKNOWN_REWARD;
+            }
+            throw new IllegalStateException(String.format("Unable to resolve reward identifier for \"%s\"", source));
         }
         else {
             return identifier;
@@ -88,6 +102,9 @@ public final class ConfigItemizeReward {
     private @Nullable Identifier resolveRewardIdentifier() {
         if (this.rewardIdentifier != null) {
             return this.rewardIdentifier;
+        }
+        else if (this.itemIdentifier != null) {
+            return this.itemIdentifier;
         }
         else if (this.reward != null) {
             this.rewardIdentifier = Itemize.get().getReward(this.reward).orElse(null);
@@ -109,16 +126,28 @@ public final class ConfigItemizeReward {
         return this.getRewardIdentifier().toString();
     }
 
-    public static @NotNull ConfigItemizeReward of(@NotNull Identifier identifier, @NotNull Chance chance) {
-        return new ConfigItemizeReward(null, identifier, chance);
+    public static @NotNull ConfigItemizeReward fromItem(@NotNull Identifier itemId, @NotNull Chance chance) {
+        return new ConfigItemizeReward(chance, null, null, itemId);
     }
 
-    public static @NotNull ConfigItemizeReward of(@NotNull String identifier, @NotNull Chance chance) {
-        return of(Identifier.fromString(identifier), chance);
+    public static @NotNull ConfigItemizeReward fromItem(@NotNull String itemId, @NotNull Chance chance) {
+        return fromItem(Identifier.fromString(itemId), chance);
     }
 
-    public static @NotNull ConfigItemizeReward of(@NotNull ItemizeReward reward, @NotNull Chance chance) {
-        return new ConfigItemizeReward(reward, null, chance);
+    public static @NotNull ConfigItemizeReward fromReward(@NotNull ItemizeReward reward, @NotNull Chance chance) {
+        return new ConfigItemizeReward(chance, reward, null, null);
+    }
+
+    public static @NotNull ConfigItemizeReward fromReward(@NotNull Identifier rewardId, @NotNull Chance chance) {
+        ItemizeReward resolvedReward = Itemize.get().fetchReward(rewardId);
+        if (resolvedReward == null) {
+            throw new IllegalStateException(String.format("Unknown ItemizeReward provided \"%s\"", rewardId));
+        }
+        return new ConfigItemizeReward(chance, resolvedReward, rewardId, null);
+    }
+
+    public static @NotNull ConfigItemizeReward fromReward(@NotNull String rewardId, @NotNull Chance chance) {
+        return fromReward(Identifier.fromString(rewardId), chance);
     }
 
     static final class Adapter implements Serializer<ConfigItemizeReward, Map<String, Object>> {
@@ -160,33 +189,44 @@ public final class ConfigItemizeReward {
         public ConfigItemizeReward deserialize(Map<String, Object> serialized) {
             if (serialized.size() == 1) {
                 // itemize:reward_id: 0..5
+                // minecraft:carrot: 0.5
 
                 Map.Entry<String, Object> first = serialized.entrySet().stream().findFirst().orElse(null);
                 Identifier identifier = Identifier.fromString(first.getKey());
                 Chance chance = Chance.deserialize(first.getValue());
 
-                return new ConfigItemizeReward(ItemizeReward.fromItemize(identifier), null, chance);
+                // Determine if the specified key is a reward or an item
+                Itemize itemize = Itemize.get();
+                if (itemize.containsReward(identifier)) {
+                    // Provided a valid item
+                    return new ConfigItemizeReward(chance, itemize.fetchReward(identifier), identifier, null);
+                }
+                else if (itemize.contains(identifier)) {
+                    // Fallback to ItemizeItemReward type
+                    return new ConfigItemizeReward(chance, null, null, identifier);
+                }
+                else {
+                    throw new RuntimeException(String.format("Invalid ItemizeReward specified \"%s\"", identifier));
+                }
             }
 
             Chance chance = serialized.containsKey("chance")
                     ? Chance.deserialize(serialized.get("chance"))
                     : Chance.literal(1);
             // display item
-            Identifier type = serialized.containsKey("type")
+            Identifier typeId = serialized.containsKey("type")
                     ? Identifier.fromString(serialized.get("type").toString()) : null;
             // reward identifier
-            Identifier identifier = serialized.containsKey("id")
+            Identifier rewardId = serialized.containsKey("id")
                     ? Identifier.fromString(serialized.get("id").toString()) : null;
 
             List<String> commands = (List) serialized.get("command");
-            if (type != null && (commands != null || (commands = (List) serialized.get("commands")) != null)) {
-                return new ConfigItemizeReward(ItemizeReward.fromCommands(type, commands), identifier, chance);
-            }
-            else if (type == null) {
-                return new ConfigItemizeReward(null, identifier, chance);
+            if (typeId != null && (commands != null || (commands = (List) serialized.get("commands")) != null)) {
+                return new ConfigItemizeReward(chance, ItemizeReward.fromCommands(typeId, commands),
+                        rewardId, typeId);
             }
             else {
-                return new ConfigItemizeReward(ItemizeReward.fromItemize(type), identifier, chance);
+                return new ConfigItemizeReward(chance, null, rewardId, typeId);
             }
         }
     }

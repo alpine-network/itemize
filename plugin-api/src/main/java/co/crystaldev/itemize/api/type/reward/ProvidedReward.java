@@ -51,7 +51,7 @@ public final class ProvidedReward implements ItemizeReward {
         }
 
         ResultingReward reward = new ResultingReward(this.displayName, this.displayItem,
-                Collections.singletonList(this.displayItem), count);
+                Collections.singletonList(this.displayItem.clone()), count);
         return Collections.singletonList(reward);
     }
 }

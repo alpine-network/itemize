@@ -48,8 +48,11 @@ public final class ItemizeItemReward implements ItemizeReward {
     }
 
     private void ensureItem() {
-        if (this.cachedItem == null) {
+        if (this.cachedItem == null || this.cachedItem.getDisplayItem() == null) {
             this.cachedItem = Itemize.get().fetch(this.identifier);
+        }
+        if (this.cachedItem == null) {
+            throw new RuntimeException("ItemizeItemReward failed to fetch item " + this.identifier);
         }
     }
 }

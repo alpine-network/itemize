@@ -84,9 +84,9 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
                 .builder(this, NamedRewardRegistry.class, "registry/rewards")
                 .addConfiguration("default", new NamedRewardRegistry(
                         "itemize:example_reward",
-                        ConfigItemizeReward.of("itemize:example_item", Chance.literal(1)),
+                        ConfigItemizeReward.fromItem("itemize:example_item", Chance.literal(1)),
                         "itemize:example_command_reward",
-                        ConfigItemizeReward.of(
+                        ConfigItemizeReward.fromReward(
                                 ItemizeReward.fromCommands("itemize:example_item",
                                         "minecraft:tell %player_name% You did it!",
                                         "itemize rng %player_name% minecraft:dirt 1..5"),
