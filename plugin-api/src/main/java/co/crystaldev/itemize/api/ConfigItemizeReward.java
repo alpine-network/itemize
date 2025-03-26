@@ -35,12 +35,19 @@ public final class ConfigItemizeReward {
     @Getter
     private Chance chance;
 
+    private transient Identifier lazyloadIdentifier;
+
     ConfigItemizeReward(@NotNull Chance chance, @Nullable ItemizeReward reward,
                         @Nullable Identifier rewardIdentifier, @Nullable Identifier itemIdentifier) {
         this.chance = chance;
         this.reward = reward;
         this.rewardIdentifier = rewardIdentifier;
         this.itemIdentifier = itemIdentifier;
+    }
+
+    ConfigItemizeReward(@NotNull Identifier lazyloadId, @NotNull Chance chance) {
+        this.lazyloadIdentifier = lazyloadId;
+        this.chance = chance;
     }
 
     /**
@@ -62,6 +69,8 @@ public final class ConfigItemizeReward {
      * @throws IllegalStateException If the reward type is unsupported or invalid.
      */
     public @NotNull ItemizeReward get() {
+        this.ensureLoaded();
+
         if (this.reward != null) {
             return this.reward;
         }
@@ -86,6 +95,8 @@ public final class ConfigItemizeReward {
      * @throws IllegalStateException If the reward type is unsupported or invalid.
      */
     public @NotNull Identifier getRewardIdentifier() {
+        this.ensureLoaded();
+
         Identifier identifier = this.resolveRewardIdentifier();
         if (identifier == null) {
             Identifier source = this.rewardIdentifier == null ? this.itemIdentifier : this.rewardIdentifier;
@@ -100,6 +111,8 @@ public final class ConfigItemizeReward {
     }
 
     private @Nullable Identifier resolveRewardIdentifier() {
+        this.ensureLoaded();
+
         if (this.rewardIdentifier != null) {
             return this.rewardIdentifier;
         }
@@ -114,6 +127,21 @@ public final class ConfigItemizeReward {
         }
 
         return null;
+    }
+
+    private void ensureLoaded() {
+        if (this.lazyloadIdentifier != null) {
+            Itemize itemize = Itemize.get();
+            if (itemize.containsReward(this.lazyloadIdentifier)) {
+                this.rewardIdentifier = this.lazyloadIdentifier;
+                this.reward = itemize.fetchReward(this.lazyloadIdentifier);
+            }
+            else if (itemize.contains(this.lazyloadIdentifier)) {
+                this.itemIdentifier = this.lazyloadIdentifier;
+            }
+
+            this.lazyloadIdentifier = null;
+        }
     }
 
     /**
@@ -196,18 +224,7 @@ public final class ConfigItemizeReward {
                 Chance chance = Chance.deserialize(first.getValue());
 
                 // Determine if the specified key is a reward or an item
-                Itemize itemize = Itemize.get();
-                if (itemize.containsReward(identifier)) {
-                    // Provided a valid item
-                    return new ConfigItemizeReward(chance, itemize.fetchReward(identifier), identifier, null);
-                }
-                else if (itemize.contains(identifier)) {
-                    // Fallback to ItemizeItemReward type
-                    return new ConfigItemizeReward(chance, null, null, identifier);
-                }
-                else {
-                    throw new RuntimeException(String.format("Invalid ItemizeReward specified \"%s\"", identifier));
-                }
+                return new ConfigItemizeReward(identifier, chance);
             }
 
             Chance chance = serialized.containsKey("chance")
