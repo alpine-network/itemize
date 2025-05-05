@@ -1,4 +1,4 @@
-package co.crystaldev.itemize.api.type.reward;
+package co.crystaldev.itemize.api.reward.type;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.alpinecore.util.ItemHelper;
@@ -33,12 +33,12 @@ public final class ItemStackReward implements ItemizeReward {
     }
 
     @Override
-    public @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player, @NotNull Chance chance,
-                                                  @NotNull Object... placeholders) {
-        int amount = chance.getCount();
+    public @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player,
+                                                  @NotNull Chance rewardCount, @NotNull Object... placeholders) {
+        int count = rewardCount.getCount();
         List<ItemStack> rewards = new ArrayList<>();
 
-        int remaining = Math.max(0, amount);
+        int remaining = Math.max(0, count);
         while (remaining > 0) {
             int stackSize = Math.min(remaining, this.item.getMaxStackSize());
             remaining -= stackSize;
@@ -48,7 +48,7 @@ public final class ItemStackReward implements ItemizeReward {
             rewards.add(builtItem);
         }
 
-        ResultingReward reward = new ResultingReward(this.getDisplayName(), this.item, rewards, amount);
+        ResultingReward reward = new ResultingReward(this.getDisplayName(), this.item, rewards, count);
         return Collections.singletonList(reward);
     }
 }

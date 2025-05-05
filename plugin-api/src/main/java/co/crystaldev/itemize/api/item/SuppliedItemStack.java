@@ -1,4 +1,4 @@
-package co.crystaldev.itemize.api.type.item;
+package co.crystaldev.itemize.api.item;
 
 import co.crystaldev.itemize.api.ItemizeItem;
 import lombok.AllArgsConstructor;

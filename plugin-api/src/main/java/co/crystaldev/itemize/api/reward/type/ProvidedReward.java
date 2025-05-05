@@ -1,4 +1,4 @@
-package co.crystaldev.itemize.api.type.reward;
+package co.crystaldev.itemize.api.reward.type;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.alpinecore.util.ItemHelper;
@@ -42,9 +42,9 @@ public final class ProvidedReward implements ItemizeReward {
     }
 
     @Override
-    public @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player, @NotNull Chance chance,
-                                                  @NotNull Object... placeholders) {
-        int count = chance.getCount();
+    public @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player,
+                                                  @NotNull Chance rewardCount, @NotNull Object... placeholders) {
+        int count = rewardCount.getCount();
 
         for (int i = 0; i < count; i++) {
             this.rewardProvider.accept(player);

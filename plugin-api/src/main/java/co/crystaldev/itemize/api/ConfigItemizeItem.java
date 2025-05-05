@@ -1,6 +1,6 @@
 package co.crystaldev.itemize.api;
 
-import co.crystaldev.itemize.api.type.item.WrappedItemStack;
+import co.crystaldev.itemize.api.item.WrappedItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import de.exlll.configlib.Configuration;
 import de.exlll.configlib.SerializeWith;

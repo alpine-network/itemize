@@ -5,6 +5,7 @@ import co.crystaldev.alpinecore.framework.config.object.item.DefinedConfigItem;
 import co.crystaldev.itemize.ItemizePlugin;
 import co.crystaldev.itemize.api.*;
 import co.crystaldev.itemize.api.loot.Chance;
+import co.crystaldev.itemize.api.reward.DefinedConfigReward;
 import com.cryptomorin.xseries.XMaterial;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -52,14 +53,26 @@ public final class NamedItemLoader {
                 .builder(itemize, NamedRewardRegistry.class, "registry/rewards")
                 .addConfiguration("default", new NamedRewardRegistry(
                         "itemize:example_reward",
-                        ConfigItemizeReward.fromItem("itemize:example_item", Chance.literal(1)),
+                        DefinedConfigReward.builder()
+                                .addItem("itemize:example_item")
+                                .buildConfig(),
+
+                        "itemize:example_multi_reward",
+                        DefinedConfigReward.builder()
+                                .displayName("<gold>Crust o' Sugar")
+                                .displayItem("minecraft:sugar")
+                                .addItem("minecraft:sugar")
+                                .addItem("minecraft:cocoa_beans")
+                                .addItem("minecraft:paper", Chance.range(2, 5))
+                                .buildConfig(),
+
                         "itemize:example_command_reward",
-                        ConfigItemizeReward.fromReward(
-                                ItemizeReward.fromCommands("itemize:example_item",
-                                        "minecraft:tell %player_name% You did it!",
-                                        "itemize rng %player_name% minecraft:dirt 1..5"),
-                                Chance.literal(1)
-                        )
+                        DefinedConfigReward.builder()
+                                .displayName("<aqua>Diamond")
+                                .displayItem("minecraft:diamond")
+                                .addCommand("give %player_name% diamond 1")
+                                .addCommand("tell %player_name% shine bright light a diamond")
+                                .buildConfig()
                 ))
                 .build();
 
@@ -67,7 +80,7 @@ public final class NamedItemLoader {
             NamedRewardRegistry registry = rewardRegistryLoader.getConfig(key);
             registry.forEach((identifier, reward) -> {
                 Identifier id = Identifier.fromString(identifier, itemize);
-                itemize.register(id, reward.get());
+                itemize.register(id, reward.build());
             });
 
             itemize.log(String.format("&aRegistered %d items from reward registry \"&d%s&a\"", registry.size(), key));

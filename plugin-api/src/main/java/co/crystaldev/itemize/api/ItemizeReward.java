@@ -2,16 +2,14 @@ package co.crystaldev.itemize.api;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.itemize.api.loot.Chance;
-import co.crystaldev.itemize.api.type.reward.CommandReward;
-import co.crystaldev.itemize.api.type.reward.ItemizeItemReward;
+import co.crystaldev.itemize.api.reward.ItemizeRewardBuilder;
+import co.crystaldev.itemize.api.reward.type.ItemizeItemReward;
+import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,6 +18,8 @@ import java.util.List;
  * @since 0.2.0
  */
 public interface ItemizeReward {
+
+    Component UNKNOWN_DISPLAY_NAME = Component.text("<unknown>");
 
     /**
      * Retrieves the display name for this reward.
@@ -40,34 +40,37 @@ public interface ItemizeReward {
      *
      * @param plugin       The plugin context.
      * @param player       The player.
-     * @param chance       The chance to roll this reward.
+     * @param rewardCount  The amount to reward.
      * @param placeholders The placeholders.
-     * @return The rewards.
+     * @return The resulting rewards.
      */
-    @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player, @NotNull Chance chance,
-                                           @NotNull Object... placeholders);
+    @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player,
+                                           @NotNull Chance rewardCount, @NotNull Object... placeholders);
 
-    static @NotNull ItemizeReward fromItemize(@NotNull String identifier) {
-        return fromItemize(Identifier.fromString(identifier));
+    /**
+     * Executes this reward on the provided player once.
+     *
+     * @param plugin       The plugin context.
+     * @param player       The player.
+     * @param placeholders The placeholders.
+     * @return The resulting rewards.
+     */
+    default @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player,
+                                                   @NotNull Object... placeholders) {
+        return this.execute(plugin, player, Chance.ONE, placeholders);
     }
 
-    static @NotNull ItemizeReward fromItemize(@NotNull Identifier itemizeItem) {
+    static @NotNull ItemizeRewardBuilder builder() {
+        return new ItemizeRewardBuilder();
+    }
+
+    static @NotNull ItemizeReward fromItem(@NotNull Identifier itemizeItem) {
         return new ItemizeItemReward(itemizeItem);
     }
 
-    static @NotNull ItemizeReward fromCommands(@NotNull Identifier displayItem, @NotNull String... commands) {
-        return fromCommands(displayItem, Arrays.asList(commands));
-    }
-
-    static @NotNull ItemizeReward fromCommands(@NotNull String displayItem, @NotNull String... commands) {
-        return fromCommands(displayItem, Arrays.asList(commands));
-    }
-
-    static @NotNull ItemizeReward fromCommands(@NotNull Identifier displayItem, @NotNull Collection<String> commands) {
-        return new CommandReward(displayItem, new ArrayList<>(commands));
-    }
-
-    static @NotNull ItemizeReward fromCommands(@NotNull String displayItem, @NotNull Collection<String> commands) {
-        return new CommandReward(Identifier.fromString(displayItem), new ArrayList<>(commands));
+    static @NotNull ItemizeReward fromItem(@NotNull String itemizeItem) {
+        Identifier identifier = Identifier.fromString(itemizeItem);
+        Preconditions.checkNotNull(identifier, "Unable to resolve ItemizeItem identifier for \"" + itemizeItem + "\"");
+        return fromItem(identifier);
     }
 }

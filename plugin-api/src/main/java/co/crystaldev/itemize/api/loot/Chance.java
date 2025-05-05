@@ -12,6 +12,10 @@ import java.util.Random;
 @AllArgsConstructor @NoArgsConstructor
 public final class Chance {
 
+    public static final Chance ZERO = Chance.literal(0);
+
+    public static final Chance ONE = Chance.literal(1);
+
     private final Random random = new Random();
 
     private double value1, value2;

@@ -1,7 +1,7 @@
 package co.crystaldev.itemize.api;
 
-import co.crystaldev.itemize.api.type.item.SuppliedItemStack;
-import co.crystaldev.itemize.api.type.item.WrappedItemStack;
+import co.crystaldev.itemize.api.item.SuppliedItemStack;
+import co.crystaldev.itemize.api.item.WrappedItemStack;
 import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

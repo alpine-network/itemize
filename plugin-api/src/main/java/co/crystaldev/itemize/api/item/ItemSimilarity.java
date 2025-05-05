@@ -1,4 +1,4 @@
-package co.crystaldev.itemize.api.type.item;
+package co.crystaldev.itemize.api.item;
 
 import co.crystaldev.alpinecore.util.ItemHelper;
 import org.bukkit.inventory.ItemStack;
