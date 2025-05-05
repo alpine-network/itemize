@@ -2,8 +2,10 @@ package co.crystaldev.itemize.api;
 
 import co.crystaldev.itemize.api.type.item.SuppliedItemStack;
 import co.crystaldev.itemize.api.type.item.WrappedItemStack;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +57,13 @@ public interface ItemizeItem {
     }
 
     /**
-     * Compares the specified {@link ItemStack} with this item to determine if they match.
+     * Gets the fixed item type, if present.
      *
-     * @param itemStack The {@link ItemStack} to compare against this item.
-     * @return Whether the provided {@link ItemStack} matches this item.
+     * @return the item type, or null if the item type is variable.
      */
-    boolean matches(@NotNull ItemStack itemStack);
+    default @Nullable XMaterial getFixedItemType() {
+        return null;
+    }
 
     /**
      * Retrieves the maximum stack size for this item.
@@ -68,6 +71,14 @@ public interface ItemizeItem {
      * @return The maximum stack size.
      */
     int getMaxStackSize();
+
+    /**
+     * Compares the specified {@link ItemStack} with this item to determine if they match.
+     *
+     * @param itemStack The {@link ItemStack} to compare against this item.
+     * @return Whether the provided {@link ItemStack} matches this item.
+     */
+    boolean matches(@NotNull ItemStack itemStack);
 
     static @NotNull ItemizeItem fromItem(@NotNull ItemStack itemStack) {
         return new WrappedItemStack(itemStack);

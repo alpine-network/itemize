@@ -1,6 +1,7 @@
 package co.crystaldev.itemize.api.type.item;
 
 import co.crystaldev.itemize.api.ItemizeItem;
+import com.cryptomorin.xseries.XMaterial;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,12 +25,17 @@ public final class WrappedItemStack implements ItemizeItem {
     }
 
     @Override
-    public boolean matches(@NotNull ItemStack itemStack) {
-        return ItemSimilarity.isSimilar(this.itemStack, itemStack);
+    public @NotNull XMaterial getFixedItemType() {
+        return XMaterial.matchXMaterial(this.itemStack);
     }
 
     @Override
     public int getMaxStackSize() {
         return this.itemStack.getMaxStackSize();
+    }
+
+    @Override
+    public boolean matches(@NotNull ItemStack itemStack) {
+        return ItemSimilarity.isSimilar(this.itemStack, itemStack);
     }
 }
