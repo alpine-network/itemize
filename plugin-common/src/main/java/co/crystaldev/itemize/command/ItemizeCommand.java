@@ -21,6 +21,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +30,17 @@ import java.util.Optional;
  * @since 0.1.0
  */
 @Command(name = "itemize", aliases = "i")
-@Description("The primary command for Itemize")
+@Description("The primary command for Itemize.")
 @Permission("itemize.command")
 final class ItemizeCommand extends AlpineCommand {
+
+    private static final int MAX_GIVE_AMOUNT = 2304;
+
     ItemizeCommand(AlpinePlugin plugin) {
         super(plugin);
     }
 
+    //   /itemize <item_id> [amount=1]
     @Execute
     public void execute(
             @Context Player player,
@@ -44,27 +50,40 @@ final class ItemizeCommand extends AlpineCommand {
         this.execute(player, player, item, amount);
     }
 
+    //   /itemize <recipient> <item_id> [amount=1]
     @Execute
     public void execute(
-            @Context CommandSender player,
+            @Context CommandSender sender,
             @Arg("recipient") Player recipient,
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
             @Arg("amount") Optional<Integer> amount
     ) {
-        PlayerInventory inventory = recipient.getInventory();
-        item.getItem(amount.orElse(1)).forEach(inventory::addItem);
+        // retrieve the items
+        int giveAmount = Math.min(MAX_GIVE_AMOUNT, amount.orElse(1));
+        ItemStack[] itemArray = item.getItem(giveAmount).toArray(new ItemStack[0]);
 
-        if (player instanceof Player) {
+        // give the items to the player
+        PlayerInventory inventory = recipient.getInventory();
+        HashMap<Integer, ItemStack> lostItems = inventory.addItem(itemArray);
+        if (!lostItems.isEmpty()) {
+            int sum = lostItems.values().stream().map(ItemStack::getAmount).reduce(0, Integer::sum);
+            giveAmount -= sum;
+        }
+
+        // notify the sender
+        if (sender instanceof Player) {
             ItemizeConfig config = ItemizeConfig.getInstance();
-            Component message = (player.equals(recipient) ? config.giveMessage : config.giveOtherMessage).build(this.plugin,
-                    recipient, (Player) player,
-                    "amount", amount.orElse(1),
+            Component message = (sender.equals(recipient) ? config.giveMessage : config.giveOtherMessage).build(this.plugin,
+                    recipient, (Player) sender,
+                    "amount", giveAmount,
                     "item", ItemHelper.createHoverComponent(item.getDisplayItem()));
-            Messaging.send(player, message);
+            Messaging.send(sender, message);
         }
     }
 
+    //   /itemize identify
     @Execute(name = "identify")
+    @Description("Identifies the held item.")
     public void identify(@Context Player player) {
         ItemizeConfig config = ItemizeConfig.getInstance();
 
@@ -72,7 +91,9 @@ final class ItemizeCommand extends AlpineCommand {
         Messaging.send(player, config.identifyMessage.build(this.plugin, player, "resolved", id));
     }
 
+    //   /itemize reward <reward_id> [chance=1]
     @Execute(name = "reward")
+    @Description("Retrieve a registered ItemizeReward.")
     public void reward(
             @Context Player player,
             @Arg("type") @Key("itemizeReward") ItemizeReward reward,
@@ -81,7 +102,9 @@ final class ItemizeCommand extends AlpineCommand {
         this.reward(player, player, reward, chance);
     }
 
+    //   /itemize reward <recipient> <reward_id> [chance=1]
     @Execute(name = "reward")
+    @Description("Give a registered ItemizeReward to a recipient player.")
     public void reward(
             @Context CommandSender sender,
             @Arg("recipient") Player recipient,
@@ -116,7 +139,9 @@ final class ItemizeCommand extends AlpineCommand {
         }
     }
 
+    //   /itemize rng <item_id> <probability>
     @Execute(name = "rng")
+    @Description("Retrieve a random number of a registered ItemizeItem.")
     public void rng(
             @Context Player player,
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
@@ -125,16 +150,18 @@ final class ItemizeCommand extends AlpineCommand {
         this.rng(player, player, item, chance);
     }
 
+    //   /itemize rng <recipient> <item_id> <probability>
     @Execute(name = "rng")
+    @Description("Give a registered ItemizeItem to a recipient player.")
     public void rng(
-            @Context CommandSender player,
+            @Context CommandSender sender,
             @Arg("recipient") Player recipient,
             @Arg("type") @Key("itemizeItem") ItemizeItem item,
             @Arg("amount") @Key("itemizeChance") Chance chance
     ) {
-        PlayerInventory inventory = recipient.getInventory();
-
-        int giveAmount = chance.getCount();
+        // retrieve the items
+        List<ItemStack> items = new ArrayList<>();
+        int giveAmount = Math.min(MAX_GIVE_AMOUNT, chance.getCount());
         int remaining = giveAmount;
         while (remaining > 0) {
             int stackSize = Math.min(remaining, item.getMaxStackSize());
@@ -142,17 +169,27 @@ final class ItemizeCommand extends AlpineCommand {
 
             ItemStack builtItem = item.getItem();
             builtItem.setAmount(stackSize);
-            inventory.addItem(builtItem);
+            items.add(builtItem);
         }
 
-        if (player instanceof Player) {
+        // give the items to the player
+        PlayerInventory inventory = recipient.getInventory();
+        ItemStack[] itemArray = items.toArray(new ItemStack[0]);
+        HashMap<Integer, ItemStack> lostItems = inventory.addItem(itemArray);
+        if (!lostItems.isEmpty()) {
+            int sum = lostItems.values().stream().map(ItemStack::getAmount).reduce(0, Integer::sum);
+            giveAmount -= sum;
+        }
+
+        // notify the sender
+        if (sender instanceof Player) {
             ItemizeConfig config = ItemizeConfig.getInstance();
-            Component message = (player.equals(recipient) ? config.rngGiveMessage : config.rngGiveOtherMessage).build(this.plugin,
-                    recipient, (Player) player,
+            Component message = (sender.equals(recipient) ? config.rngGiveMessage : config.rngGiveOtherMessage).build(this.plugin,
+                    recipient, (Player) sender,
                     "amount", giveAmount,
                     "item", ItemHelper.createHoverComponent(item.getDisplayItem()),
                     "chance", chance.toString());
-            Messaging.send(player, message);
+            Messaging.send(sender, message);
         }
     }
 }
