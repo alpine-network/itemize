@@ -1,5 +1,8 @@
 package co.crystaldev.itemize.api.loot;
 
+import de.exlll.configlib.Configuration;
+import de.exlll.configlib.SerializeWith;
+import de.exlll.configlib.Serializer;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +12,7 @@ import java.util.Random;
 /**
  * @since 0.1.0
  */
+@Configuration @SerializeWith(serializer = Chance.Adapter.class)
 @AllArgsConstructor @NoArgsConstructor
 public final class Chance {
 
@@ -85,5 +89,17 @@ public final class Chance {
         LITERAL,
         RANGE,
         CHANCE
+    }
+
+    static final class Adapter implements Serializer<Chance, Object> {
+        @Override
+        public Object serialize(Chance element) {
+            return element.serialize();
+        }
+
+        @Override
+        public Chance deserialize(Object element) {
+            return Chance.deserialize(element);
+        }
     }
 }
