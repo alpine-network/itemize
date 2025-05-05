@@ -54,6 +54,19 @@ public final class ConfigItemizeReward {
     }
 
     /**
+     * Awards this reward to the provided player once.
+     *
+     * @param plugin       The plugin context.
+     * @param player       The player to reward.
+     * @param placeholders The placeholders.
+     * @return The resulting rewards.
+     */
+    public @NotNull List<ResultingReward> execute(@NotNull AlpinePlugin plugin, @NotNull Player player,
+                                                  @NotNull Object... placeholders) {
+        return this.get().execute(plugin, player, Chance.ONE, placeholders);
+    }
+
+    /**
      * Retrieves the {@link ItemizeReward} defined by this ConfigItemizeReward.
      *
      * @return The ItemizeReward defined by this ConfigItemizeReward.
