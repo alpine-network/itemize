@@ -1,10 +1,8 @@
 package co.crystaldev.itemize;
 
 import co.crystaldev.alpinecore.AlpinePlugin;
-import co.crystaldev.alpinecore.framework.config.ConfigLoader;
-import co.crystaldev.alpinecore.framework.config.object.item.DefinedConfigItem;
 import co.crystaldev.itemize.api.*;
-import co.crystaldev.itemize.api.loot.Chance;
+import co.crystaldev.itemize.registry.NamedItemLoader;
 import com.cryptomorin.xseries.XMaterial;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
@@ -50,59 +48,7 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Override
     public void onStart() {
-        ItemizeConfig config = ItemizeConfig.getInstance();
-        config.registry.forEach((identifier, item) -> {
-            Identifier id = Identifier.fromString(identifier, this);
-            this.register(id, ItemizeItem.fromItem(item.build(this)));
-        });
-
-        ConfigLoader<NamedItemRegistry> itemRegistryLoader = ConfigLoader
-                .builder(this, NamedItemRegistry.class, "registry/items")
-                .addConfiguration("default", new NamedItemRegistry(
-                        "itemize:example_item",
-                        DefinedConfigItem.builder(XMaterial.SUGAR)
-                                .name("<info>CrustoSugar</info>")
-                                .lore(
-                                        "<emphasis>Crafted under <i>unusual circumstances</i>, this</emphasis>",
-                                        "<emphasis>sugar will grant you great discomfort because it</emphasis>",
-                                        "<emphasis>is concrete powder.</emphasis>"
-                                )
-                                .build()
-                ))
-                .build();
-        for (String key : itemRegistryLoader.getConfigKeys()) {
-            NamedItemRegistry registry = itemRegistryLoader.getConfig(key);
-            registry.forEach((identifier, item) -> {
-                Identifier id = Identifier.fromString(identifier, this);
-                this.register(id, ItemizeItem.fromItem(item.build(this)));
-            });
-
-            this.log(String.format("&aRegistered %d items from item registry \"&d%s&a\"", registry.size(), key));
-        }
-
-        ConfigLoader<NamedRewardRegistry> rewardRegistryLoader = ConfigLoader
-                .builder(this, NamedRewardRegistry.class, "registry/rewards")
-                .addConfiguration("default", new NamedRewardRegistry(
-                        "itemize:example_reward",
-                        ConfigItemizeReward.fromItem("itemize:example_item", Chance.literal(1)),
-                        "itemize:example_command_reward",
-                        ConfigItemizeReward.fromReward(
-                                ItemizeReward.fromCommands("itemize:example_item",
-                                        "minecraft:tell %player_name% You did it!",
-                                        "itemize rng %player_name% minecraft:dirt 1..5"),
-                                Chance.literal(1)
-                        )
-                ))
-                .build();
-        for (String key : rewardRegistryLoader.getConfigKeys()) {
-            NamedRewardRegistry registry = rewardRegistryLoader.getConfig(key);
-            registry.forEach((identifier, reward) -> {
-                Identifier id = Identifier.fromString(identifier, this);
-                this.register(id, reward.get());
-            });
-
-            this.log(String.format("&aRegistered %d items from reward registry \"&d%s&a\"", registry.size(), key));
-        }
+        NamedItemLoader.load(this);
     }
 
     // region Item

@@ -1,4 +1,4 @@
-package co.crystaldev.itemize;
+package co.crystaldev.itemize.registry;
 
 import co.crystaldev.alpinecore.util.CollectionUtils;
 import co.crystaldev.itemize.api.ConfigItemizeReward;
