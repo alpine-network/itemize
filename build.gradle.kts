@@ -1,9 +1,6 @@
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.0"
+    id("com.gradleup.shadow") version "9.0.0-beta13"
 }
 
 allprojects {
@@ -30,11 +27,11 @@ allprojects {
 
     configurations.create("shaded")
     dependencies {
-        compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
+        compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.12.2-R0.1-SNAPSHOT")
         compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.10-SNAPSHOT")
 
-        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.30")
+        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.38")
+        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.38")
     }
 
     tasks {
@@ -45,43 +42,6 @@ allprojects {
 
         withType<JavaCompile> {
             options.encoding = "UTF-8"
-        }
-
-        register("replaceTokens") {
-            doLast {
-                // Define the temporary directory where the files will be copied to
-                val tempSrcDir = File(project.buildDir, "tempSrc")
-                if (tempSrcDir.exists())
-                    tempSrcDir.deleteRecursively()
-
-                // Copy all Java files from 'src/main/java' to the temporary directory
-                copy {
-                    from("src/main/java")
-                    into(tempSrcDir)
-                }
-
-                val javaFiles = project.fileTree(tempSrcDir) {
-                    include("**/*.java")
-                }
-
-                javaFiles.forEach { file ->
-                    var content = file.readText()
-                    props.forEach {
-                        val token = "{{ ${it.key} }}"
-                        if (content.contains(token)) {
-                            content = content.replace(token, it.value)
-                            file.writeText(content)
-                        }
-                    }
-                }
-            }
-        }
-
-        compileJava {
-            dependsOn("replaceTokens")
-
-            // Change the Java compilation source to the modified files in the temp directory
-            source = fileTree("${buildDir}/tempSrc")
         }
 
         processResources {
@@ -111,14 +71,10 @@ tasks {
         configurations = listOf(project.configurations["shaded"])
         archiveClassifier.set("dev-shadow")
         archiveFileName.set("${rootProject.property("plugin_name")}-${compileVersion(true)}.jar")
+    }
 
-        doLast {
-            val input = archiveFile.get()
-            val outputDir = File(rootProject.rootDir, "builds")
-            val outputFile = File(outputDir, input.asFile.name)
-            outputDir.mkdirs()
-            Files.copy(input.asFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-        }
+    build {
+        dependsOn(shadowJar)
     }
 
     jar {
@@ -135,5 +91,5 @@ fun compileVersion(prerelease: Boolean): String {
     val minor = rootProject.properties["version_minor"]
     val patch = rootProject.properties["version_patch"]
     val preRelease = rootProject.properties["version_pre_release"]
-    return "${major}.${minor}.${patch}${if (!prerelease || preRelease == "none") "" else preRelease}"
+    return "${major}.${minor}.${patch}${if (!prerelease || preRelease == "none") "" else "-${preRelease}"}"
 }
