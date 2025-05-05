@@ -2,15 +2,11 @@ package co.crystaldev.itemize.api;
 
 import co.crystaldev.itemize.api.type.item.SuppliedItemStack;
 import co.crystaldev.itemize.api.type.item.WrappedItemStack;
-import co.crystaldev.itemize.api.type.item.WrappedStatusEffects;
-import com.google.common.collect.ImmutableSet;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -19,17 +15,6 @@ import java.util.function.Supplier;
  * @since 0.1.0
  */
 public interface ItemizeItem {
-
-    /**
-     * Retrieves the item type for this item.
-     *
-     * @return The item type.
-     * @deprecated since 0.2.0. Being removed in a future version
-     */
-    @Deprecated
-    default @NotNull ItemType getType() {
-        return ItemType.ITEM_STACK;
-    }
 
     /**
      * Retrieves the underlying {@link ItemStack} associated with this item.
@@ -70,17 +55,6 @@ public interface ItemizeItem {
     }
 
     /**
-     * Retrieves a set of {@link PotionEffect} associated with this item.
-     *
-     * @return The potion effects.
-     * @deprecated since 0.2.0. Being removed in a future version
-     */
-    @Deprecated
-    default @NotNull Set<PotionEffect> getEffects() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Compares the specified {@link ItemStack} with this item to determine if they match.
      *
      * @param itemStack The {@link ItemStack} to compare against this item.
@@ -97,14 +71,6 @@ public interface ItemizeItem {
 
     static @NotNull ItemizeItem fromItem(@NotNull ItemStack itemStack) {
         return new WrappedItemStack(itemStack);
-    }
-
-    /**
-     * @deprecated since 0.2.0. Being removed in a future version
-     */
-    @Deprecated
-    static @NotNull ItemizeItem fromEffects(@NotNull Iterable<PotionEffect> effects) {
-        return new WrappedStatusEffects(ImmutableSet.copyOf(effects));
     }
 
     static @NotNull ItemizeItem fromSupplier(@NotNull Supplier<ItemStack> itemStackSupplier) {
