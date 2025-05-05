@@ -14,9 +14,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a reward defined inside a config.
@@ -109,7 +107,8 @@ public final class DefinedConfigReward {
                 return serializedValues;
             }
             else if (value instanceof List) {
-                return value;
+                List<String> values = (List<String>) value;
+                return values.size() == 1 ? values.get(0) : values;
             }
 
             return null;
@@ -125,6 +124,9 @@ public final class DefinedConfigReward {
             }
             else if (element instanceof List) {
                 return new ValueHolder(element);
+            }
+            else if (element instanceof String) {
+                return new ValueHolder(Collections.singletonList((String) element));
             }
 
             return null;
