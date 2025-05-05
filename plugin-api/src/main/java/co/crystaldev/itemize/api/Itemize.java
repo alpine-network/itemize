@@ -2,6 +2,7 @@ package co.crystaldev.itemize.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,6 +33,17 @@ public interface Itemize {
      * @param item       The item to be registered.
      */
     void register(@NotNull Identifier identifier, @NotNull ItemizeItem item);
+
+    /**
+     * Registers an item with the given identifier.
+     *
+     * @param key  The unique identifier for the item.
+     * @param item The item to be registered.
+     */
+    default void register(@NotNull String key, @NotNull Plugin plugin, @NotNull ItemizeItem item) {
+        Identifier identifier = new Identifier(plugin, key);
+        this.register(identifier, item);
+    }
 
     /**
      * Retrieves an item associated with the given identifier.
