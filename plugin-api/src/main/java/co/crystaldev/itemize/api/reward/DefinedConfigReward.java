@@ -56,7 +56,8 @@ public final class DefinedConfigReward {
         Object val = this.value == null ? null : this.value.value;
         if (val instanceof Map) {
             ((Map<String, Object>) val).forEach((value, amount) -> {
-                values.put(value, Chance.deserialize(amount));
+                Chance deserialized = amount instanceof Chance ? (Chance) amount : Chance.deserialize(amount);
+                values.put(value, deserialized);
             });
         }
         else if (val instanceof Iterable) {
