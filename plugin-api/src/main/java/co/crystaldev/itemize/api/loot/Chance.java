@@ -4,6 +4,7 @@ import de.exlll.configlib.Configuration;
 import de.exlll.configlib.SerializeWith;
 import de.exlll.configlib.Serializer;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,23 +23,25 @@ public final class Chance {
 
     private final Random random = new Random();
 
-    private double value1, value2;
+    @Getter
+    private double lowerBound, upperBound;
 
+    @Getter
     private Type type;
 
     public int getCount() {
         switch (this.type) {
-            case RANGE: return (int) (Math.round(this.random.nextDouble() * (int) (this.value2 - this.value1)) + this.value1);
-            case CHANCE: return this.random.nextDouble() < this.value1 ? 1 : 0;
-            default: return (int) this.value1;
+            case RANGE: return (int) (Math.round(this.random.nextDouble() * (int) (this.upperBound - this.lowerBound)) + this.lowerBound);
+            case CHANCE: return this.random.nextDouble() < this.lowerBound ? 1 : 0;
+            default: return (int) this.lowerBound;
         }
     }
 
     public @NotNull Object serialize() {
         switch (this.type) {
-            case RANGE: return ((int) this.value1) + ".." + ((int) this.value2);
-            case CHANCE: return this.value1;
-            default: return (int) this.value1;
+            case RANGE: return ((int) this.lowerBound) + ".." + ((int) this.upperBound);
+            case CHANCE: return this.lowerBound;
+            default: return (int) this.lowerBound;
         }
     }
 
@@ -46,11 +49,11 @@ public final class Chance {
     public String toString() {
         switch (this.type) {
             case RANGE:
-                return ((int) this.value1) + "-" + ((int) this.value2) + "x";
+                return ((int) this.lowerBound) + "-" + ((int) this.upperBound) + "x";
             case CHANCE:
-                return (Math.round((this.value1 * 100.0) * 100.0) / 100.0) + "%";
+                return (Math.round((this.lowerBound * 100.0) * 100.0) / 100.0) + "%";
             default:
-                return ((int) this.value1) + "x";
+                return ((int) this.lowerBound) + "x";
         }
     }
 
@@ -85,7 +88,7 @@ public final class Chance {
         return new Chance(chance, 0, Type.CHANCE);
     }
 
-    private enum Type {
+    enum Type {
         LITERAL,
         RANGE,
         CHANCE
