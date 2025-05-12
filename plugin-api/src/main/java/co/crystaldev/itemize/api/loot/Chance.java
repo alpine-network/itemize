@@ -88,7 +88,7 @@ public final class Chance {
         return new Chance(chance, 0, Type.CHANCE);
     }
 
-    enum Type {
+    public enum Type {
         LITERAL,
         RANGE,
         CHANCE
