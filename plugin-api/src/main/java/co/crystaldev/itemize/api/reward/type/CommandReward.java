@@ -121,7 +121,7 @@ public final class CommandReward implements ItemizeReward {
         }
 
         // no display name set, use unknown
-        if (this.resolvedDisplayItem == null) {
+        if (this.resolvedDisplayName == null) {
             this.resolvedDisplayName = UNKNOWN_DISPLAY_NAME;
         }
     }
