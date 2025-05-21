@@ -13,11 +13,11 @@ publishing {
 
             pom {
                 name.set("${rootProject.properties["plugin_name"]}-API")
-                description.set(rootProject.properties["plugin_description"] as String)
+                description.set("${rootProject.properties["plugin_description"]}")
 
-                groupId = rootProject.properties["maven_group"] as String
+                groupId = "${rootProject.properties["maven_group"]}"
                 artifactId = "${rootProject.properties["maven_artifact"]}-api"
-                version = rootProject.version as String
+                version = "${rootProject.version}"
                 packaging = "jar"
             }
         }

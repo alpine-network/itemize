@@ -1,21 +1,20 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.0.0-beta13"
+    alias(libs.plugins.shadow)
 }
+
+group = "${project.properties["maven_group"]}.${project.properties["maven_artifact"]}"
+project.version = "${project.properties["version"]}"
 
 allprojects {
     apply(plugin = "java")
 
-    group = compileGroup()
-    version = compileVersion(true)
-
     val props = mapOf(
-        "mavenArtifact" to rootProject.property("maven_artifact") as String,
-        "pluginName" to rootProject.property("plugin_name") as String,
-        "pluginDescription" to rootProject.property("plugin_description") as String,
-        "pluginVersion" to compileVersion(true),
-        "pluginVersionRaw" to compileVersion(false),
-        "pluginGroup" to compileGroup(),
+        "mavenArtifact" to rootProject.properties["maven_artifact"],
+        "pluginName" to rootProject.properties["plugin_name"],
+        "pluginDescription" to rootProject.properties["plugin_description"],
+        "pluginGroup" to rootProject.group,
+        "pluginVersion" to rootProject.version,
     )
 
     repositories {
@@ -25,13 +24,13 @@ allprojects {
         maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    configurations.create("shaded")
+    val libs = rootProject.libs
     dependencies {
-        compileOnly(group = "org.spigotmc", name = "spigot-api", version = "1.12.2-R0.1-SNAPSHOT")
-        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.10-SNAPSHOT")
+        compileOnly(libs.spigot.api)
+        compileOnly(libs.alpinecore)
 
-        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.38")
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.38")
+        compileOnly(libs.lombok)
+        annotationProcessor(libs.lombok)
     }
 
     tasks {
@@ -56,7 +55,7 @@ allprojects {
 
 dependencies {
     listOf(project(":plugin-common"), project(":plugin-api")).forEach {
-        "shaded"(it) { isTransitive = false }
+        shadow(it) { isTransitive = false }
     }
 }
 
@@ -68,9 +67,9 @@ sourceSets {
 
 tasks {
     shadowJar {
-        configurations = listOf(project.configurations["shaded"])
+        configurations = listOf(project.configurations["shadow"])
         archiveClassifier.set("dev-shadow")
-        archiveFileName.set("${rootProject.property("plugin_name")}-${compileVersion(true)}.jar")
+        archiveFileName.set("${rootProject.property("plugin_name")}-${project.version}.jar")
     }
 
     build {
@@ -80,16 +79,4 @@ tasks {
     jar {
         archiveClassifier.set("dev")
     }
-}
-
-fun compileGroup(): String {
-    return "${rootProject.properties["maven_group"]}.${rootProject.properties["maven_artifact"]}"
-}
-
-fun compileVersion(prerelease: Boolean): String {
-    val major = rootProject.properties["version_major"]
-    val minor = rootProject.properties["version_minor"]
-    val patch = rootProject.properties["version_patch"]
-    val preRelease = rootProject.properties["version_pre_release"]
-    return "${major}.${minor}.${patch}${if (!prerelease || preRelease == "none") "" else "-${preRelease}"}"
 }
