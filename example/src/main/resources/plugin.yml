@@ -1,0 +1,10 @@
+main: co.crystaldev.example.ItemizeExamplePlugin
+name: ItemizeExamplePlugin
+description: Example plugin for Itemize
+version: 1.0.0
+authors:
+  - BestBearr
+api-version: 1.13
+depend:
+  - AlpineCore
+  - Itemize
