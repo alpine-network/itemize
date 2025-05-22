@@ -31,6 +31,8 @@ public final class ConfigItemizeReward {
 
     private transient Identifier lazyloadIdentifier;
 
+    private transient boolean resolved;
+
     ConfigItemizeReward(@Nullable Identifier rewardIdentifier, @Nullable Identifier itemIdentifier) {
         this.rewardIdentifier = rewardIdentifier;
         this.itemIdentifier = itemIdentifier;
@@ -91,7 +93,7 @@ public final class ConfigItemizeReward {
             }
         }
 
-        throw new IllegalStateException("Unsupported or invalid ItemizeReward type \"" + this.resolvedIdentifier + "\"");
+        throw new IllegalStateException("Unsupported or invalid ItemizeReward type \"" + this.lazyloadIdentifier + "\"");
     }
 
     /**
@@ -135,7 +137,7 @@ public final class ConfigItemizeReward {
     }
 
     private void ensureLoaded() {
-        if (this.lazyloadIdentifier != null) {
+        if (this.lazyloadIdentifier != null && !this.resolved) {
             Itemize itemize = Itemize.get();
             if (itemize.containsReward(this.lazyloadIdentifier)) {
                 this.resolvedIdentifier = this.lazyloadIdentifier;
@@ -146,7 +148,7 @@ public final class ConfigItemizeReward {
                 this.itemIdentifier = this.lazyloadIdentifier;
             }
 
-            this.lazyloadIdentifier = null;
+            this.resolved = true;
         }
     }
 
