@@ -4,9 +4,12 @@ import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.alpinecore.framework.command.AlpineCommand;
 import co.crystaldev.alpinecore.util.ItemHelper;
 import co.crystaldev.alpinecore.util.Messaging;
+import co.crystaldev.alpinecore.util.SimpleTimer;
 import co.crystaldev.itemize.ItemizeConfig;
+import co.crystaldev.itemize.ItemizePlugin;
 import co.crystaldev.itemize.api.*;
 import co.crystaldev.itemize.api.loot.Chance;
+import co.crystaldev.itemize.registry.NamedItemLoader;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -38,6 +41,18 @@ final class ItemizeCommand extends AlpineCommand {
 
     ItemizeCommand(AlpinePlugin plugin) {
         super(plugin);
+    }
+
+    @Execute(name = "reload")
+    public void reload(@Context CommandSender sender) {
+        this.plugin.log("&e=== RELOAD &aSTART &e===");
+
+        SimpleTimer timer = new SimpleTimer();
+        timer.start();
+        NamedItemLoader.load(ItemizePlugin.getInstance());
+
+        long duration = timer.stop();
+        this.plugin.log(String.format("&e=== RELOAD &aCOMPLETE&e (&d%dms&e) ===", duration));
     }
 
     //   /itemize <item_id> [amount=1]
