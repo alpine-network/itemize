@@ -68,4 +68,8 @@ public final class ItemizeConfig extends AlpineConfig {
     @Comment("")
     public ConfigMessage rewardListEntry = ConfigMessage.of(
             "<info> *</info> <emphasis>%item% (%item_count% items)");
+
+    @Comment("")
+    public ConfigMessage reload = ConfigMessage.of(
+            "<info>Itemize</info> <bracket>»</bracket> Reloaded all registered items in %duration%ms");
 }

@@ -44,6 +44,7 @@ final class ItemizeCommand extends AlpineCommand {
     }
 
     @Execute(name = "reload")
+    @Description("Reloads all registered items.")
     public void reload(@Context CommandSender sender) {
         this.plugin.log("&e=== RELOAD &aSTART &e===");
 
@@ -53,6 +54,14 @@ final class ItemizeCommand extends AlpineCommand {
 
         long duration = timer.stop();
         this.plugin.log(String.format("&e=== RELOAD &aCOMPLETE&e (&d%dms&e) ===", duration));
+
+        // Notify the sender
+        if (sender instanceof Player) {
+            ItemizeConfig config = ItemizeConfig.getInstance();
+
+            Messaging.send(sender, config.reload.build(this.plugin, (Player) sender,
+                    "duration", duration));
+        }
     }
 
     //   /itemize <item_id> [amount=1]
