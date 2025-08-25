@@ -1,7 +1,11 @@
-plugins {
-    id("java")
+dependencies {
+    compileOnly(projects.itemizeApi)
+    compileOnly(libs.alpinecore)
+    compileOnly(libs.spigotApi)
 }
 
-dependencies {
-    compileOnly(project(":plugin-api"))
+tasks {
+    processResources {
+        expandProperties("plugin.yml")
+    }
 }

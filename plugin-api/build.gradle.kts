@@ -1,35 +1,31 @@
 plugins {
-    id("maven-publish")
+    id("itemize.maven-conventions")
 }
 
-java {
-    withSourcesJar()
+dependencies {
+    compileOnly(libs.alpinecore)
+    compileOnly(libs.spigotApi)
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-
-            pom {
-                name.set("${rootProject.properties["plugin_name"]}-API")
-                description.set("${rootProject.properties["plugin_description"]}")
-
-                groupId = "${rootProject.properties["maven_group"]}"
-                artifactId = "${rootProject.properties["maven_artifact"]}-api"
-                version = "${rootProject.version}"
-                packaging = "jar"
-            }
-        }
+tasks {
+    named("build") {
+        dependsOn("javadoc")
     }
-    repositories {
-        maven {
-            name = "AlpineCloud"
-            url = uri("https://lib.alpn.cloud/alpine-public")
-            credentials {
-                username = System.getenv("ALPINE_MAVEN_NAME")
-                password = System.getenv("ALPINE_MAVEN_SECRET")
-            }
-        }
+    withType<Jar>().configureEach {
+        includeLicenseFile()
+    }
+    withType<Javadoc>().configureEach {
+        enabled = true
+        val v = libs.versions
+        val acv = v.alpinecore.get()
+        val repo = if (acv.contains("-")) "snapshots" else "releases"
+        applyLinks(
+            "https://docs.oracle.com/en/java/javase/11/docs/api/",
+            "https://hub.spigotmc.org/javadocs/spigot/",
+            "https://lib.alpn.cloud/javadoc/${repo}/co/crystaldev/alpinecore/${acv}/raw/",
+            "https://jd.advntr.dev/api/${v.adventure.get()}",
+            "https://javadoc.io/doc/org.jetbrains/annotations/${v.annotations.get()}/",
+            "https://javadoc.io/doc/com.github.cryptomorin/XSeries/${v.xseries.get()}/",
+        )
     }
 }

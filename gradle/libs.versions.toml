@@ -1,13 +1,20 @@
 [versions]
-alpinecore = "0.4.10-SNAPSHOT"
-lombok = "1.18.38"
-shadow = "9.0.0-beta13"
-spigot = "1.12.2-R0.1-SNAPSHOT"
+alpinecore = "0.4.10-SNAPSHOT"      # https://github.com/alpine-network/alpine-core/releases
+lombok = "1.18.38"                  # https://projectlombok.org/changelog
+spigot = "1.12.2-R0.1-SNAPSHOT"     # https://spigotmc.org/
+
+mavenPublish = "0.34.0"             # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
+shadow = "9.0.2"                    # https://github.com/GradleUp/shadow/releases
+
+# Javadocs - https://github.com/alpine-network/alpine-core/blob/master/gradle/libs.versions.toml
+adventure = "4.23.0"
+annotations = "26.0.2"
+xseries = "13.3.3"
 
 [libraries]
 alpinecore = { group = "co.crystaldev", name = "alpinecore", version.ref = "alpinecore" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
-spigot-api = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
+spigotApi = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
 
-[plugins]
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+mavenPublish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
+shadow-plugin = { module = "com.gradleup.shadow:shadow-gradle-plugin", version.ref = "shadow" }

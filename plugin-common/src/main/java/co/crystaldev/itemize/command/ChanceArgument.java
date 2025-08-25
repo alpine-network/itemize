@@ -9,8 +9,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 12/07/2024
+ * @author BestBearr
+ * @since 0.2.0
  */
 public final class ChanceArgument extends AlpineArgumentResolver<Chance> {
     public ChanceArgument() {
