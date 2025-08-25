@@ -1,3 +1,11 @@
+/*
+ * This file is part of Itemize - https://github.com/alpine-network/itemize
+ * Copyright (C) 2025 Crystal Development, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 package co.crystaldev.itemize.command;
 
 import co.crystaldev.alpinecore.framework.command.AlpineArgumentResolver;
@@ -9,8 +17,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 12/07/2024
+ * @author BestBearr
+ * @since 0.2.0
  */
 public final class ChanceArgument extends AlpineArgumentResolver<Chance> {
     public ChanceArgument() {

@@ -2,7 +2,7 @@
 
 A powerful Item and Reward registration API for seamless custom item integration between Minecraft plugins.
 
-> This plugin is currently in an early state of development and breaking changes **will** occur.
+> This plugin is currently in an early stage of development and breaking changes **will** occur.
 
 ### Features
 - Universal item registration system across plugins
@@ -17,20 +17,59 @@ This plugin requires the [AlpineCore](https://github.com/alpine-network/alpine-c
 The plugin has been explicitly verified to work on releases ranging from `1.8.8` to `1.21.5`.
 
 ### For Developers
-The library can be added as a dependency to your Gradle buildscript like so:
+To use Itemize, you must add it as a dependency to your project:
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
+repositories {
+    maven("https://lib.alpn.cloud/releases")
+}
+
+dependencies {
+    compileOnly("co.crystaldev:itemize-api:0.4.0")
+}
+```
+</details>
+
+
+<details>
+<summary>Gradle (Groovy DSL)</summary>
 
 ```groovy
 repositories {
     maven {
-        name 'Alpine Public'
-        url 'https://lib.alpn.cloud/alpine-public'
+        url 'https://lib.alpn.cloud/releases'
     }
 }
 
 dependencies {
-    compileOnly 'co.crystaldev:itemize:0.4.0'
+    compileOnly 'co.crystaldev:itemize-api:0.4.0'
 }
 ```
+</details>
+
+<details>
+<summary>Maven</summary>
+
+```xml
+<repositories>
+  <repository>
+    <name>Alpine Cloud</name>
+    <url>https://lib.alpn.cloud/releases</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>co.crystaldev</groupId>
+    <artifactId>itemize-api</artifactId>
+    <version>0.4.0</version>
+  </dependency>
+</dependencies>
+```
+</details>
 
 All classes and methods that are part of the API should have Javadocs. If one does not, open an issue.
 
