@@ -5,9 +5,9 @@ plugins {
 subprojects {
     apply {
         plugin("itemize.base-conventions")
-        //if (project.name != "example") {
-        //    plugin("itemize.spotless-conventions")
-        //}
+        if (project.name != "example") {
+            plugin("itemize.spotless-conventions")
+        }
     }
 }
 
