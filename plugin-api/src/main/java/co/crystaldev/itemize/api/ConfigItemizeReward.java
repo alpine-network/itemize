@@ -196,7 +196,7 @@ public final class ConfigItemizeReward {
             catch (IllegalStateException ex) {
                 // reward is not registered, fallback to configured identifier
 
-                Identifier source = reward.rewardIdentifier == null ? reward.itemIdentifier : reward.rewardIdentifier;
+                Identifier source = reward.lazyloadIdentifier;
 
                 // ensure the identifier is present
                 if (source == null) {
