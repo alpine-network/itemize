@@ -196,7 +196,7 @@ public final class ConfigItemizeReward {
             catch (IllegalStateException ex) {
                 // reward is not registered, fallback to configured identifier
 
-                Identifier source = this.rewardIdentifier == null ? this.itemIdentifier : this.rewardIdentifier;
+                Identifier source = reward.rewardIdentifier == null ? reward.itemIdentifier : reward.rewardIdentifier;
 
                 // ensure the identifier is present
                 if (source == null) {
