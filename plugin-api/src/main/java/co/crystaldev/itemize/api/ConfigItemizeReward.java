@@ -190,7 +190,21 @@ public final class ConfigItemizeReward {
 
         @Override
         public String serialize(ConfigItemizeReward reward) {
-            return reward.asString();
+            try {
+                return reward.asString();
+            }
+            catch (IllegalStateException ex) {
+                // reward is not registered, fallback to configured identifier
+
+                Identifier source = this.rewardIdentifier == null ? this.itemIdentifier : this.rewardIdentifier;
+
+                // ensure the identifier is present
+                if (source == null) {
+                    throw new IllegalArgumentException("Unable to resolve ItemizeReward identifier", ex);
+                }
+
+                return source.toString();
+            }
         }
 
         @Override
