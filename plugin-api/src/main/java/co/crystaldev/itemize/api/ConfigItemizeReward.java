@@ -190,21 +190,19 @@ public final class ConfigItemizeReward {
 
         @Override
         public String serialize(ConfigItemizeReward reward) {
-            try {
-                return reward.asString();
-            }
-            catch (IllegalStateException ex) {
-                // reward is not registered, fallback to configured identifier
+            Identifier source = reward.lazyloadIdentifier;
 
-                Identifier source = reward.lazyloadIdentifier;
-
-                // ensure the identifier is present
-                if (source == null) {
-                    throw new IllegalArgumentException("Unable to resolve ItemizeReward identifier", ex);
+            // ensure the identifier is present
+            if (source == null) {
+                try {
+                    return reward.asString();
                 }
-
-                return source.toString();
+                catch (IllegalStateException ex) {
+                    throw new IllegalArgumentException("Unknown ItemizeReward identifier provided to ConfigItemizeReward", ex);
+                }
             }
+
+            return source.toString();
         }
 
         @Override
