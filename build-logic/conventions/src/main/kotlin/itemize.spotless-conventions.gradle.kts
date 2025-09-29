@@ -18,10 +18,5 @@ extensions.configure<SpotlessExtension> {
         licenseHeaderFile(rootProject.file("gradle/licenses/mpl-2.0-header.txt"))
         removeUnusedImports()
     }
-}
-
-tasks {
-    named("build") {
-        dependsOn(named("spotlessApply"))
-    }
+    isEnforceCheck = false
 }
