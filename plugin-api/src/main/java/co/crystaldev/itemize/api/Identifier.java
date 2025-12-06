@@ -34,9 +34,9 @@ public final class Identifier {
         this.key = key;
 
         Preconditions.checkArgument(isValidNamespace(this.namespace),
-                "Invalid namespace. Must be [a-z0-9._-]: %s", this.namespace);
+                String.format("Invalid namespace. Must be [a-z0-9._-]: %s", this.namespace));
         Preconditions.checkArgument(isValidKey(this.key),
-                "Invalid key. Must be [a-z0-9/._-]: %s", this.key);
+                String.format("Invalid key. Must be [a-z0-9/._-]: %s", this.key));
     }
 
     public Identifier(@NotNull Plugin plugin, @NotNull String key) {
@@ -44,9 +44,9 @@ public final class Identifier {
         this.key = key.toLowerCase(Locale.ROOT);
 
         Preconditions.checkArgument(isValidNamespace(this.namespace),
-                "Invalid namespace. Must be [a-z0-9._-]: %s", this.namespace);
+                String.format("Invalid namespace. Must be [a-z0-9._-]: %s", this.namespace));
         Preconditions.checkArgument(isValidKey(this.key),
-                "Invalid key. Must be [a-z0-9/._-]: %s", this.key);
+                String.format("Invalid key. Must be [a-z0-9/._-]: %s", this.key));
     }
 
     @Override
