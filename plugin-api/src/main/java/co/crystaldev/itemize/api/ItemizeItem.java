@@ -42,9 +42,10 @@ public interface ItemizeItem {
     default @NotNull List<ItemStack> getItem(int amount) {
         List<ItemStack> items = new ArrayList<>();
 
+        int maxStackSize = this.getMaxStackSize();
         int remaining = Math.max(0, amount);
         while (remaining > 0) {
-            int stackSize = Math.min(remaining, this.getMaxStackSize());
+            int stackSize = Math.min(remaining, maxStackSize);
             remaining -= stackSize;
 
             ItemStack builtItem = this.getItem();

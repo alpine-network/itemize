@@ -29,6 +29,11 @@ public final class WrappedItemStack implements ItemizeItem {
 
     @Override
     public @NotNull ItemStack getItem() {
+        return this.itemStack.clone();
+    }
+
+    @Override
+    public @NotNull ItemStack getDisplayItem() {
         return this.itemStack;
     }
 
