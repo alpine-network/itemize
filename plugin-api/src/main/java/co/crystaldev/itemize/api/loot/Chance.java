@@ -46,11 +46,10 @@ public final class Chance {
     }
 
     public @NotNull Object serialize() {
-        switch (this.type) {
-            case RANGE: return ((int) this.lowerBound) + ".." + ((int) this.upperBound);
-            case CHANCE: return this.lowerBound;
-            default: return (int) this.lowerBound;
+        if (this.type == Type.RANGE) {
+            return ((int) this.lowerBound) + ".." + ((int) this.upperBound);
         }
+        return this.lowerBound;
     }
 
     @Override
@@ -69,16 +68,20 @@ public final class Chance {
         if (element instanceof String) {
             String[] split = ((String) element).split("\\.\\.");
             if (split.length == 2) {
-                int from = Integer.parseInt(split[0]);
-                int to = Integer.parseInt(split[1]);
+                int from = (int) Double.parseDouble(split[0]);
+                int to = (int) Double.parseDouble(split[1]);
                 return range(Math.min(from, to), Math.max(from, to));
             }
         }
-        else if (element instanceof Integer) {
-            return literal((Integer) element);
-        }
         else if (element instanceof Number) {
-            return chance(((Number) element).doubleValue());
+            Number number = (Number) element;
+            double val = number.doubleValue();
+            if (val == 0.0 || val >= 1.0) {
+                return literal((int) val);
+            }
+            else {
+                return chance(val);
+            }
         }
 
         throw new IllegalStateException("invalid drop chance \"" + element + "\"");
