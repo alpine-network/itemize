@@ -49,6 +49,6 @@ public final class WrappedItemStack implements ItemizeItem {
 
     @Override
     public boolean matches(@NotNull ItemStack itemStack) {
-        return ItemSimilarity.isSimilar(this.itemStack, itemStack);
+        return this.itemStack.isSimilar(itemStack) || ItemSimilarity.isSimilar(this.itemStack, itemStack);
     }
 }
