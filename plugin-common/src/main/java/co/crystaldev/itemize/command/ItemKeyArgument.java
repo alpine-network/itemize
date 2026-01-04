@@ -19,6 +19,8 @@ import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.command.CommandSender;
 
+import java.util.Locale;
+
 /**
  * @since 0.1.0
  */
@@ -46,7 +48,7 @@ final class ItemKeyArgument extends AlpineArgumentResolver<Identifier> {
 
     @Override
     public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<Identifier> argument, SuggestionContext context) {
-        String current = context.getCurrent().lastLevel().toLowerCase();
+        String current = context.getCurrent().lastLevel().toLowerCase(Locale.ROOT);
         return ItemizePlugin.getInstance().getCombinedRegistry().keySet()
                 .stream()
                 .map(Identifier::toString)

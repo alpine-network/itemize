@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -85,7 +86,7 @@ public final class ConfigItemizeItem {
             return (Identifier) this.value;
         }
         else if (this.value instanceof XMaterial) {
-            return Identifier.minecraft(((XMaterial) this.value).name().toLowerCase());
+            return Identifier.minecraft(((XMaterial) this.value).name().toLowerCase(Locale.ROOT));
         }
         else {
             throw new IllegalStateException("unsupported ItemizeItem type");

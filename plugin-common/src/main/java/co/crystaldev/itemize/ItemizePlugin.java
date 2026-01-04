@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,11 +42,12 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
         ImmutableMap.Builder<Identifier, ItemizeItem> builder = ImmutableMap.builder();
         for (XMaterial value : XMaterial.values()) {
             Material type;
-            if (!value.isSupported() || (type = value.parseMaterial()) == null || !ItemHelper.isItem(type)) {
+            if (!value.isSupported() || (type = value.get()) == null || !ItemHelper.isItem(type)) {
                 continue;
             }
 
-            builder.put(Identifier.minecraft(value.name().toLowerCase()), ItemizeItem.fromItem(value.parseItem()));
+            builder.put(Identifier.minecraft(value.name().toLowerCase(Locale.ROOT)),
+                    ItemizeItem.fromItem(value.parseItem()));
         }
         this.minecraftRegistry = builder.build();
     }
@@ -70,7 +72,8 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
     @Override
     public @NotNull Optional<ItemizeItem> get(@NotNull Identifier identifier) {
         ItemizeItem value = this.registry.get(identifier);
-        return Optional.ofNullable(value != null ? value : this.minecraftRegistry.get(identifier));
+        return Optional.ofNullable(value != null ? value
+                : this.minecraftRegistry.get(identifier));
     }
 
     @Override
@@ -84,13 +87,15 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
             }
         }
 
-        Identifier identifier = Identifier.minecraft(XMaterial.matchXMaterial(itemStack).name().toLowerCase());
+        String key = XMaterial.matchXMaterial(itemStack).name().toLowerCase(Locale.ROOT);
+        Identifier identifier = Identifier.minecraft(key);
         return Optional.ofNullable(this.matches(identifier, itemStack) ? identifier : null);
     }
 
     @Override
     public @Nullable ItemizeItem fetch(@NotNull Identifier identifier) {
-        return Optional.ofNullable(this.registry.get(identifier)).orElseGet(() -> this.minecraftRegistry.get(identifier));
+        return Optional.ofNullable(this.registry.get(identifier))
+                .orElseGet(() -> this.minecraftRegistry.get(identifier));
     }
 
     @Override
@@ -101,7 +106,8 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
 
     @Override
     public boolean contains(@NotNull Identifier identifier) {
-        return this.registry.containsKey(identifier) || this.minecraftRegistry.containsKey(identifier);
+        return this.registry.containsKey(identifier)
+                || this.minecraftRegistry.containsKey(identifier);
     }
 
     @Override

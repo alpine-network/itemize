@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -68,7 +69,7 @@ public class ItemizeRewardArgument extends AlpineArgumentResolver<ItemizeReward>
 
     @Override
     public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<ItemizeReward> argument, SuggestionContext context) {
-        String current = context.getCurrent().multilevel().toLowerCase();
+        String current = context.getCurrent().multilevel().toLowerCase(Locale.ROOT);
 
         Set<String> suggestions = new HashSet<>();
         for (Identifier identifier : ItemizePlugin.getInstance().getRewardRegistry().keySet()) {
