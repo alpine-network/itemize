@@ -9,6 +9,7 @@
 package co.crystaldev.itemize.api.item;
 
 import co.crystaldev.alpinecore.util.ItemHelper;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
@@ -27,13 +28,18 @@ final class ItemSimilarity {
 
         // TODO: eventually use NBT or some other system so we can allow renaming items etc.
         //  this hack allows enchantments and durability :bruh:
-        if ((item.getItemMeta() instanceof Repairable || item.getDurability() != similarItem.getDurability())) {
+        if ((item.getDurability() != similarItem.getDurability() || item.getItemMeta() instanceof Repairable)) {
             // in what scenario will this not be enough for most custom items?
             // this is also the final iteration of about 2 hours of slamming
             // my head and deffo not the best method. better method is probably
             // just using reflection to access internal comparison tools
             // or set temporarily durability to the same value for both -bearr
-            return ItemHelper.getDisplayName(item).equals(ItemHelper.getDisplayName(similarItem));
+
+            String itemName = PlainTextComponentSerializer.plainText().serialize(
+                    ItemHelper.getDisplayName(item));
+            String otherName = PlainTextComponentSerializer.plainText().serialize(
+                    ItemHelper.getDisplayName(similarItem));
+            return itemName.equalsIgnoreCase(otherName);
         }
         else {
             return item.isSimilar(similarItem);
