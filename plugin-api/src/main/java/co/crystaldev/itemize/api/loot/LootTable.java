@@ -43,15 +43,34 @@ public final class LootTable {
     }
 
     public @NotNull List<ItemStack> getItems(int amount, @Nullable Function<ItemStack, ItemStack> itemFunction) {
-        List<ItemStack> items = new ArrayList<>();
+        Map<ItemStack, Integer> totals = new HashMap<>();
         for (int i = 0; i < amount; i++) {
             this.items.forEach((item, chance) -> {
+                ItemStack template = item.getItem();
                 int count = chance.getCount();
+
                 for (int j = 0; j < count; j++) {
-                    ItemStack compiledItem = item.getItem().clone();
-                    items.add(itemFunction == null ? compiledItem : itemFunction.apply(compiledItem));
+                    ItemStack clone = template.clone();
+                    if (itemFunction != null)
+                        clone = itemFunction.apply(clone);
+                    clone.setAmount(1);
+                    totals.merge(clone, 1, Integer::sum);
                 }
             });
+        }
+
+        List<ItemStack> items = new ArrayList<>();
+        for (Map.Entry<ItemStack, Integer> entry : totals.entrySet()) {
+            ItemStack item = entry.getKey();
+            int total = entry.getValue();
+            int maxStackSize = item.getMaxStackSize();
+
+            while (total > 0) {
+                ItemStack clone = item.clone();
+                clone.setAmount(Math.min(total, maxStackSize));
+                items.add(clone);
+                total -= maxStackSize;
+            }
         }
 
         return items;
