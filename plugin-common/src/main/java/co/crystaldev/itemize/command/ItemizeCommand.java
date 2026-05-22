@@ -120,7 +120,7 @@ final class ItemizeCommand extends AlpineCommand {
     public void identify(@Context Player player) {
         ItemizeConfig config = ItemizeConfig.getInstance();
 
-        ItemStack itemInHand = XReflection.supports(1, 9) ? player.getInventory().getItemInMainHand()
+        ItemStack itemInHand = XReflection.supports(1, 9, 0) ? player.getInventory().getItemInMainHand()
                 : player.getItemInHand();
 
         String id = Itemize.get().get(itemInHand).map(Identifier::toString).orElse("unknown");

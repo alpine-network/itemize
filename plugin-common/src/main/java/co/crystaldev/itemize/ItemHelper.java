@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 final class ItemHelper {
     public static boolean isItem(@NotNull Material material) {
-        if (XReflection.supports(1, 12)) {
+        if (XReflection.supports(1, 12, 0)) {
             return material.isItem();
         }
 
