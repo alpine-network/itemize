@@ -8,7 +8,7 @@
  */
 package co.crystaldev.itemize;
 
-import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.reflection.XReflection;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  */
 final class ItemHelper {
     public static boolean isItem(@NotNull Material material) {
-        if (XMaterial.getVersion() >= 12) {
+        if (XReflection.supports(1, 12)) {
             return material.isItem();
         }
 

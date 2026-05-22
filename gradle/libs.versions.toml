@@ -10,7 +10,7 @@ spotless = "8.0.0"                  # https://github.com/diffplug/spotless/relea
 # Javadocs - https://github.com/alpine-network/alpine-core/blob/master/gradle/libs.versions.toml
 adventure = "4.23.0"
 annotations = "26.0.2"
-xseries = "13.3.3"
+xseries = "13.7.0"
 
 [libraries]
 alpinecore = { group = "co.crystaldev", name = "alpinecore", version.ref = "alpinecore" }

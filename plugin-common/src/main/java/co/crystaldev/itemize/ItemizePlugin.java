@@ -46,8 +46,16 @@ public final class ItemizePlugin extends AlpinePlugin implements Itemize {
                 continue;
             }
 
-            builder.put(Identifier.minecraft(value.name().toLowerCase(Locale.ROOT)),
-                    ItemizeItem.fromItem(value.parseItem()));
+            try {
+                ItemStack resolvedItem = value.parseItem(); // MC 1.21.11+ throws for select types
+                if (resolvedItem != null) {
+                    builder.put(Identifier.minecraft(value.name().toLowerCase(Locale.ROOT)),
+                            ItemizeItem.fromItem(resolvedItem));
+                }
+            }
+            catch (Exception ex) {
+                // NO OP
+            }
         }
         this.minecraftRegistry = builder.build();
     }

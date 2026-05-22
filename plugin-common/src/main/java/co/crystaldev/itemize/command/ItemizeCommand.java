@@ -18,7 +18,7 @@ import co.crystaldev.itemize.ItemizePlugin;
 import co.crystaldev.itemize.api.*;
 import co.crystaldev.itemize.api.loot.Chance;
 import co.crystaldev.itemize.registry.NamedItemLoader;
-import com.cryptomorin.xseries.XMaterial;
+import com.cryptomorin.xseries.reflection.XReflection;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
 import dev.rollczi.litecommands.annotations.command.Command;
@@ -120,8 +120,8 @@ final class ItemizeCommand extends AlpineCommand {
     public void identify(@Context Player player) {
         ItemizeConfig config = ItemizeConfig.getInstance();
 
-        ItemStack itemInHand = XMaterial.supports(9) ? player.getItemInHand()
-                : player.getInventory().getItemInMainHand();
+        ItemStack itemInHand = XReflection.supports(1, 9) ? player.getInventory().getItemInMainHand()
+                : player.getItemInHand();
 
         String id = Itemize.get().get(itemInHand).map(Identifier::toString).orElse("unknown");
         Messaging.send(player, config.identifyMessage.build(this.plugin, player, "resolved", id));
