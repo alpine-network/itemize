@@ -1,19 +1,19 @@
 [versions]
-alpinecore = "0.4.10-SNAPSHOT"      # https://github.com/alpine-network/alpine-core/releases
-lombok = "1.18.42"                  # https://projectlombok.org/changelog
+alpinecore = "0.5.0-SNAPSHOT"       # https://github.com/alpine-network/alpine-core/releases
+lombok = "1.18.46"                  # https://projectlombok.org/changelog
 spigot = "1.12.2-R0.1-SNAPSHOT"     # https://spigotmc.org/
 
-mavenPublish = "0.34.0"             # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
-shadow = "9.2.2"                    # https://github.com/GradleUp/shadow/releases
-spotless = "8.0.0"                  # https://github.com/diffplug/spotless/releases
+mavenPublish = "0.37.0"             # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
+shadow = "9.6.1"                    # https://github.com/GradleUp/shadow/releases
+spotless = "8.9.0"                  # https://github.com/diffplug/spotless/releases
 
 # Javadocs - https://github.com/alpine-network/alpine-core/blob/master/gradle/libs.versions.toml
-adventure = "4.23.0"
-annotations = "26.0.2"
-xseries = "13.7.0"
+adventure = "4.26.1"
+annotations = "26.1.0"
+xseries = "13.7.1"
 
 [libraries]
-alpinecore = { group = "co.crystaldev", name = "alpinecore", version.ref = "alpinecore" }
+alpinecore = { group = "co.crystaldev", name = "alpinecore-bukkit", version.ref = "alpinecore" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 spigotApi = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
 
